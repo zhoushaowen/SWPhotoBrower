@@ -85,7 +85,7 @@ static NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.25;
 {
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
     flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:flow];
+    _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width+16, self.view.frame.size.height) collectionViewLayout:flow];
     _collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     flow.minimumLineSpacing = 0;
     _collectionView.delegate = self;
@@ -104,7 +104,7 @@ static NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.25;
 {
     [super viewWillLayoutSubviews];
     UICollectionViewFlowLayout *flow = (UICollectionViewFlowLayout *)_collectionView.collectionViewLayout;
-    flow.itemSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
+    flow.itemSize = CGSizeMake(self.view.frame.size.width+16, self.view.frame.size.height);
 }
 
 - (void)viewDidLayoutSubviews
