@@ -8,7 +8,7 @@
 
 #import "SWPhotoBrowerController.h"
 #import "SWPhotoBrowerCell.h"
-#import "SDImageCache.h"
+#import <SDImageCache.h>
 
 static NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.25;
 

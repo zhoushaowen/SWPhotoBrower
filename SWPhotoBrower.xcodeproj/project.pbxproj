@@ -17,9 +17,11 @@
 		360FB3BE1E8FCE43001F285B /* SWPhotoBrowerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 360FB3B81E8FCE43001F285B /* SWPhotoBrowerController.m */; };
 		360FB3BF1E8FCE43001F285B /* SWProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 360FB3BA1E8FCE43001F285B /* SWProgressView.m */; };
 		360FB3C01E8FCE43001F285B /* UIViewController+PhotoBrower.m in Sources */ = {isa = PBXBuildFile; fileRef = 360FB3BC1E8FCE43001F285B /* UIViewController+PhotoBrower.m */; };
+		F5548044668F13A71E4544E5 /* libPods-SWPhotoBrower.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C03445ABD47F5382B5332032 /* libPods-SWPhotoBrower.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		220186AE8B46B46009259CBE /* Pods-SWPhotoBrower.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SWPhotoBrower.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SWPhotoBrower/Pods-SWPhotoBrower.debug.xcconfig"; sourceTree = "<group>"; };
 		360FB39A1E8FCE0B001F285B /* SWPhotoBrower.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SWPhotoBrower.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		360FB39E1E8FCE0B001F285B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		360FB3A01E8FCE0B001F285B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -38,6 +40,8 @@
 		360FB3BA1E8FCE43001F285B /* SWProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWProgressView.m; sourceTree = "<group>"; };
 		360FB3BB1E8FCE43001F285B /* UIViewController+PhotoBrower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PhotoBrower.h"; sourceTree = "<group>"; };
 		360FB3BC1E8FCE43001F285B /* UIViewController+PhotoBrower.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PhotoBrower.m"; sourceTree = "<group>"; };
+		9C228718199C8F95AAD22541 /* Pods-SWPhotoBrower.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SWPhotoBrower.release.xcconfig"; path = "Pods/Target Support Files/Pods-SWPhotoBrower/Pods-SWPhotoBrower.release.xcconfig"; sourceTree = "<group>"; };
+		C03445ABD47F5382B5332032 /* libPods-SWPhotoBrower.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SWPhotoBrower.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5548044668F13A71E4544E5 /* libPods-SWPhotoBrower.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,6 +61,8 @@
 			children = (
 				360FB39C1E8FCE0B001F285B /* SWPhotoBrower */,
 				360FB39B1E8FCE0B001F285B /* Products */,
+				D1FA40DB80DDD7E1A339E867 /* Pods */,
+				BA669B547E5BC66BC0060EAC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -107,6 +114,23 @@
 			path = SWPhotoBrower;
 			sourceTree = "<group>";
 		};
+		BA669B547E5BC66BC0060EAC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C03445ABD47F5382B5332032 /* libPods-SWPhotoBrower.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D1FA40DB80DDD7E1A339E867 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				220186AE8B46B46009259CBE /* Pods-SWPhotoBrower.debug.xcconfig */,
+				9C228718199C8F95AAD22541 /* Pods-SWPhotoBrower.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -114,9 +138,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 360FB3B11E8FCE0B001F285B /* Build configuration list for PBXNativeTarget "SWPhotoBrower" */;
 			buildPhases = (
+				B18896D8FBEC61FE479FEFC6 /* [CP] Check Pods Manifest.lock */,
 				360FB3961E8FCE0B001F285B /* Sources */,
 				360FB3971E8FCE0B001F285B /* Frameworks */,
 				360FB3981E8FCE0B001F285B /* Resources */,
+				36EF538A2CF1AAD1675D393C /* [CP] Embed Pods Frameworks */,
+				4797A76BEA65BB9796BC89C7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -173,6 +200,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		36EF538A2CF1AAD1675D393C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SWPhotoBrower/Pods-SWPhotoBrower-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4797A76BEA65BB9796BC89C7 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SWPhotoBrower/Pods-SWPhotoBrower-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B18896D8FBEC61FE479FEFC6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		360FB3961E8FCE0B001F285B /* Sources */ = {
@@ -303,6 +378,7 @@
 		};
 		360FB3B21E8FCE0B001F285B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 220186AE8B46B46009259CBE /* Pods-SWPhotoBrower.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 2YW229246G;
@@ -315,6 +391,7 @@
 		};
 		360FB3B31E8FCE0B001F285B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9C228718199C8F95AAD22541 /* Pods-SWPhotoBrower.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 2YW229246G;

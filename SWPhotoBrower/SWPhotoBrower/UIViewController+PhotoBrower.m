@@ -20,15 +20,5 @@
     });
 }
 
-//- (void)setBrowerPresentingViewController:(UIViewController *)browerPresentingViewController
-//{
-//    objc_setAssociatedObject(self, &browerPresentingViewController, self, OBJC_ASSOCIATION_ASSIGN);
-//}
-//
-//- (UIViewController *)browerPresentingViewController
-//{
-//    return objc_getAssociatedObject(self, &BrowerPresentingViewController);
-//}
-
 
 @end

@@ -7,11 +7,11 @@
 //
 
 #import "SWPhotoBrowerCell.h"
-#import "UIImageView+WebCache.h"
-#import "MBProgressHUD+Extension.h"
+#import <UIImageView+WebCache.h>
 #import "SWPhotoBrowerController.h"
 #import "SWProgressView.h"
 #import <SDWebImageManager.h>
+#import <MBProgressHUD.h>
 
 @interface SWPhotoBrowerCell ()<UIScrollViewDelegate>
 {
@@ -217,14 +217,21 @@
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
 {
+    NSString *msg = nil;
     if(error)
     {
-        NSLog(@"保存失败");
-        [MBProgressHUD showErrorHUDWithMessage:@"保存失败" toView:self.browerVC.view];
+        msg = @"保存失败";
     }else{
-        NSLog(@"保存成功");
-        [MBProgressHUD showSuccessHUDWithMessage:@"保存成功" toView:self.browerVC.view];
+        msg = @"保存成功";
     }
+    [self showHUDWithMessage:msg];
+}
+
+- (void)showHUDWithMessage:(NSString *)msg {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.browerVC.view animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    hud.label.text = msg;
+    [hud hideAnimated:YES afterDelay:1.0f];
 }
 
 - (void)dealloc
