@@ -43,7 +43,7 @@
 {
     if(!_scrollView)
     {
-        _scrollView = [[UIScrollView alloc] initWithFrame:self.contentView.bounds];
+        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.frame.size.width-16, self.contentView.frame.size.height)];
         _scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _scrollView.delegate = self;
         //单击

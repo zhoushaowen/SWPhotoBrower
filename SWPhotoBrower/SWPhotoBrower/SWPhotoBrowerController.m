@@ -135,8 +135,11 @@ static NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.25;
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    SWPhotoBrowerCell *browerCell = (SWPhotoBrowerCell *)cell;
-    [browerCell.scrollView setZoomScale:1.0f animated:NO];
+    NSArray<NSIndexPath *> *visibleIndexPaths = [collectionView indexPathsForVisibleItems];
+    if(visibleIndexPaths.lastObject.item != indexPath.item){
+        SWPhotoBrowerCell *browerCell = (SWPhotoBrowerCell *)cell;
+        [browerCell.scrollView setZoomScale:1.0f animated:NO];
+    }
 }
 
 #pragma mark - UIScrollViewDelegate
