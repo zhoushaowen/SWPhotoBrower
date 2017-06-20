@@ -27,6 +27,7 @@ static NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.25;
 @property (nonatomic) NSInteger index;
 @property (nonatomic,strong) UIImageView *tempImageView;
 @property (nonatomic,strong) UICollectionView *collectionView;
+@property (nonatomic) SWPhotoBrowerControllerStatus photoBrowerControllerStatus;
 
 @end
 
@@ -244,7 +245,10 @@ static NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.25;
 
 - (void)hideBrowerController
 {
-    [self dismissViewControllerAnimated:NO completion:nil];
+    self.photoBrowerControllerStatus = SWPhotoBrowerControllerHidingStatus;
+    [self dismissViewControllerAnimated:NO completion:^{
+        self.photoBrowerControllerStatus = SWPhotoBrowerControllerUnShowStatus;
+    }];
 }
 
 - (CGRect)getTempImageViewFrameWithImage:(UIImage *)image

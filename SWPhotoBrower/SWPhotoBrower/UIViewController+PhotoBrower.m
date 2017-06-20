@@ -13,10 +13,14 @@
 
 - (void)showBrower:(SWPhotoBrowerController *)browerController
 {
+    if(browerController.photoBrowerControllerStatus != SWPhotoBrowerControllerUnShowStatus) return;
     dispatch_async(dispatch_get_main_queue(), ^{
+        [browerController setValue:@(SWPhotoBrowerControllerShowingStatus) forKey:@"photoBrowerControllerStatus"];
         browerController.transitioningDelegate = browerController;
         browerController.modalPresentationStyle = UIModalPresentationCustom;
-        [self presentViewController:browerController animated:NO completion:nil];
+        [self presentViewController:browerController animated:NO completion:^{
+            [browerController setValue:@(SWPhotoBrowerControllerShowStatus) forKey:@"photoBrowerControllerStatus"];
+        }];
     });
 }
 

@@ -9,6 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "UIViewController+PhotoBrower.h"
 
+typedef NS_ENUM(NSUInteger, SWPhotoBrowerControllerStatus) {
+    SWPhotoBrowerControllerUnShowStatus,//未显示
+    SWPhotoBrowerControllerShowingStatus,//正在显示出来
+    SWPhotoBrowerControllerShowStatus,//已经显示出来
+    SWPhotoBrowerControllerHidingStatus,//正在隐藏
+};
+
 @class SWPhotoBrowerController;
 
 @protocol SWPhotoBrowerControllerDelegate <NSObject>
@@ -26,6 +33,11 @@
 
 //保存是哪个控制器弹出的图片浏览器,解决self.presentingViewController在未present之前取到的值为nil的情况
 @property (nonatomic,weak,readonly) UIViewController *browerPresentingViewController;
+
+/**
+ 显示状态
+ */
+@property (nonatomic,readonly) SWPhotoBrowerControllerStatus photoBrowerControllerStatus;
 
 @property (nonatomic,weak) id<SWPhotoBrowerControllerDelegate> delegate;
 //当前图片的索引
