@@ -94,7 +94,7 @@
 {
     _normalImageUrl = normalImageUrl;
     self.scrollView.zoomScale = 1.0f;
-    UIImage *image = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:normalImageUrl.absoluteString];
+    UIImage *image = [[SDImageCache sharedImageCache] imageFromCacheForKey:normalImageUrl.absoluteString];
     self.imagView.image = image;
     CGSize size = _browerVC.normalImageViewSize;
     CGFloat offX = ([UIScreen mainScreen].bounds.size.width - size.width)*0.5f;
@@ -113,7 +113,7 @@
     self.scrollView.maximumZoomScale = 1.0f;
     self.scrollView.minimumZoomScale = 1.0f;
     //从缓存中取大图
-    UIImage *image = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:bigImageUrl.absoluteString];
+    UIImage *image = [[SDImageCache sharedImageCache] imageFromCacheForKey:bigImageUrl.absoluteString];
     if(image)
     {
         [self adjustImageViewWithImage:image animated:NO];

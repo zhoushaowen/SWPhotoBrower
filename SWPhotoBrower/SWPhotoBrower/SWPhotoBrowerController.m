@@ -180,7 +180,7 @@ static NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.25;
 {
     NSURL *imageUrl = _bigImageUrls[_index];
     //从缓存中获取大图
-    UIImage *image = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:imageUrl.absoluteString];
+    UIImage *image = [[SDImageCache sharedImageCache] imageFromCacheForKey:imageUrl.absoluteString];
     if(image)//有大图直接做动画
     {
         //获取转换之后的坐标
