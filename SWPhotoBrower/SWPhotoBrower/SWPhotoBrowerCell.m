@@ -180,6 +180,7 @@
 
 - (void)doubleTap:(UITapGestureRecognizer *)gesture
 {
+    if(gesture.state != UIGestureRecognizerStateEnded) return;
     if(self.scrollView.zoomScale == 1.0f)
     {
         CGPoint point = [gesture locationInView:self.imagView];
@@ -192,16 +193,18 @@
 
 - (void)singleTap:(UITapGestureRecognizer *)gesture
 {
+    if(gesture.state != UIGestureRecognizerStateEnded) return;
     [_browerVC performSelectorOnMainThread:NSSelectorFromString(@"doPhotoHideAnimation") withObject:nil waitUntilDone:YES];
 }
 
 - (void)longPress:(UILongPressGestureRecognizer *)gesture
 {
+    if(gesture.state != UIGestureRecognizerStateBegan) return;
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     [alert addAction:[UIAlertAction actionWithTitle:@"保存图片" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         if(self.imagView.image)
         {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
                 UIImageWriteToSavedPhotosAlbum(self.imagView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
             });
         }
