@@ -7,16 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIViewController+PhotoBrower.h"
 
 typedef NS_ENUM(NSUInteger, SWPhotoBrowerControllerStatus) {
     SWPhotoBrowerControllerUnShowStatus,//未显示
     SWPhotoBrowerControllerShowingStatus,//正在显示出来
-    SWPhotoBrowerControllerShowStatus,//已经显示出来
+    SWPhotoBrowerControllerDidShowStatus,//已经显示出来
     SWPhotoBrowerControllerHidingStatus,//正在隐藏
+    SWPhotoBrowerControllerDidHideStatus,//已经隐藏
 };
 
 @class SWPhotoBrowerController;
+
+extern NSTimeInterval const SWPhotoBrowerAnimationDuration;
 
 @protocol SWPhotoBrowerControllerDelegate <NSObject>
 
@@ -29,27 +31,46 @@ typedef NS_ENUM(NSUInteger, SWPhotoBrowerControllerStatus) {
 
 @end
 
-@interface SWPhotoBrowerController : UIViewController<UIViewControllerTransitioningDelegate>
+@interface SWPhotoBrowerController : UIViewController<UIViewControllerTransitioningDelegate,UIViewControllerAnimatedTransitioning>
 
 //保存是哪个控制器弹出的图片浏览器,解决self.presentingViewController在未present之前取到的值为nil的情况
 @property (nonatomic,weak,readonly) UIViewController *browerPresentingViewController;
-
 /**
  显示状态
  */
 @property (nonatomic,readonly) SWPhotoBrowerControllerStatus photoBrowerControllerStatus;
 
 @property (nonatomic,weak) id<SWPhotoBrowerControllerDelegate> delegate;
-//当前图片的索引
+/**
+ 当前图片的索引
+ */
 @property (nonatomic,readonly) NSInteger index;
-//小图url
+/**
+ 小图url
+ */
 @property (nonatomic,readonly,strong) NSArray<NSURL *> *normalImageUrls;
-//大图url
+/**
+ 大图url
+ */
 @property (nonatomic,readonly,strong) NSArray<NSURL *> *bigImageUrls;
-//小图的大小
+/**
+ 小图的大小
+ */
 @property (nonatomic,readonly) CGSize normalImageViewSize;
-//初始化方法
-- (instancetype)initWithIndex:(NSInteger)index delegate:(id<SWPhotoBrowerControllerDelegate>)delegate normalImageUrls:(NSArray<NSURL *> *)normalImageUrls bigImageUrls:(NSArray<NSURL *> *)bigImageUrls browerPresentingViewController:(UIViewController *)browerPresentingViewController;
+/**
+ 初始化方法
 
+ @param index 当前图片在数组中的index
+ @param delegate delegate
+ @param normalImageUrls 小图url数组
+ @param bigImageUrls 大图url数组
+ @param browerPresentingViewController 在哪个控制器上弹出
+ @return 图片浏览器
+ */
+- (instancetype)initWithIndex:(NSInteger)index delegate:(id<SWPhotoBrowerControllerDelegate>)delegate normalImageUrls:(NSArray<NSURL *> *)normalImageUrls bigImageUrls:(NSArray<NSURL *> *)bigImageUrls browerPresentingViewController:(UIViewController *)browerPresentingViewController;
+/**
+ 显示图片浏览器
+ */
+- (void)showBrower;
 
 @end

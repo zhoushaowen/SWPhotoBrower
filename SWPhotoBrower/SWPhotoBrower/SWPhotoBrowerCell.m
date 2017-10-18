@@ -29,13 +29,19 @@
     if(self)
     {
         [self.contentView addSubview:self.scrollView];
+        self.imagView = [UIImageView new];
         [self.scrollView addSubview:self.imagView];
+        [self.contentView addSubview:self.progressView];
+        self.progressView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.progressView attribute:NSLayoutAttributeCenterX multiplier:1.0f constant:0]];
+        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.progressView attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0]];
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_progressView(w)]" options:0 metrics:@{@"w":@(self.progressView.frame.size.width)} views:NSDictionaryOfVariableBindings(_progressView)]];
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_progressView(h)]" options:0 metrics:@{@"h":@(self.progressView.frame.size.height)} views:NSDictionaryOfVariableBindings(_progressView)]];
         __weak typeof(self) weakSelf = self;
         _observer = [[NSNotificationCenter defaultCenter] addObserverForName:UIDeviceOrientationDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
             [weakSelf.scrollView setZoomScale:1.0f animated:YES];
         }];
     }
-    
     return self;
 }
 
@@ -43,9 +49,14 @@
 {
     if(!_scrollView)
     {
-        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.frame.size.width-16, self.contentView.frame.size.height)];
+        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.frame.size.width - 16, self.contentView.frame.size.height)];
         _scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _scrollView.delegate = self;
+#ifdef __IPHONE_11_0
+        if([_scrollView respondsToSelector:@selector(setContentInsetAdjustmentBehavior:)]){
+            _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
+#endif
         //单击
         UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTap:)];
         singleTap.numberOfTapsRequired = 1;
@@ -55,29 +66,12 @@
         doubleTap.numberOfTapsRequired = 2;
         [_scrollView addGestureRecognizer:doubleTap];
         [singleTap requireGestureRecognizerToFail:doubleTap];
-        
         //添加长按手势
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
         [_scrollView addGestureRecognizer:longPress];
     }
     
     return _scrollView;
-}
-
-- (UIImageView *)imagView
-{
-    if(!_imagView)
-    {
-        _imagView = [[UIImageView alloc] init];
-        [_imagView addSubview:self.progressView];
-        self.progressView.translatesAutoresizingMaskIntoConstraints = NO;
-        [_imagView addConstraint:[NSLayoutConstraint constraintWithItem:_imagView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.progressView attribute:NSLayoutAttributeCenterX multiplier:1.0f constant:0]];
-        [_imagView addConstraint:[NSLayoutConstraint constraintWithItem:_imagView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.progressView attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0]];
-        [_imagView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_progressView(w)]" options:0 metrics:@{@"w":@(self.progressView.frame.size.width)} views:NSDictionaryOfVariableBindings(_progressView)]];
-        [_imagView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_progressView(h)]" options:0 metrics:@{@"h":@(self.progressView.frame.size.height)} views:NSDictionaryOfVariableBindings(_progressView)]];
-    }
-    
-    return _imagView;
 }
 
 - (SWProgressView *)progressView
@@ -95,15 +89,16 @@
     _normalImageUrl = normalImageUrl;
     self.scrollView.zoomScale = 1.0f;
     UIImage *image = [[SDImageCache sharedImageCache] imageFromCacheForKey:normalImageUrl.absoluteString];
-    self.imagView.image = image;
+//    self.imagView.image = image;
     CGSize size = _browerVC.normalImageViewSize;
     CGFloat offX = ([UIScreen mainScreen].bounds.size.width - size.width)*0.5f;
     offX = offX<0 ? 0 : offX;
     CGFloat offY = ([UIScreen mainScreen].bounds.size.height - size.height)*0.5f;
     offY = offY<0 ? 0: offY;
-    self.imagView.frame = CGRectMake(0, 0, size.width, size.height);
-    self.scrollView.contentInset = UIEdgeInsetsMake(offY, offX, offY, offX);
-    self.scrollView.contentSize = size;
+//    self.imagView.frame = CGRectMake(0, 0, size.width, size.height);
+//    self.scrollView.contentInset = UIEdgeInsetsMake(offY, offX, offY, offX);
+//    self.scrollView.contentSize = size;
+    [self adjustImageViewWithImage:image];
 }
 
 - (void)setBigImageUrl:(NSURL *)bigImageUrl
@@ -112,48 +107,49 @@
     //先关闭缩放
     self.scrollView.maximumZoomScale = 1.0f;
     self.scrollView.minimumZoomScale = 1.0f;
+    self.progressView.progress = 1.0f;
     //从缓存中取大图
     UIImage *image = [[SDImageCache sharedImageCache] imageFromCacheForKey:bigImageUrl.absoluteString];
     if(image)
     {
-        [self adjustImageViewWithImage:image animated:NO];
-        //开启
+        [self adjustImageViewWithImage:image];
+        //开启缩放
         self.scrollView.maximumZoomScale = 2.0f;
-//        self.scrollView.minimumZoomScale = 0.5f;
+        self.scrollView.minimumZoomScale = 0.5f;
     }else{
+        self.progressView.progress = 0.01;
+        __weak typeof(self) weakSelf = self;
+        [[SDWebImageManager sharedManager] cancelAll];
         [[SDWebImageManager sharedManager] loadImageWithURL:bigImageUrl options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
             CGFloat proress = receivedSize*1.0f/expectedSize*1.0f;
-            NSLog(@"%f",proress);
-            self.progressView.progress = proress;
+//            NSLog(@"%f",proress);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakSelf.progressView.progress = proress;
+            });
         } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
-            if(error)
-                return;
-            self.scrollView.maximumZoomScale = 2.0f;
-//            self.scrollView.minimumZoomScale = 0.5f;
-            [self adjustImageViewWithImage:image animated:YES];
+            if(error) return;
+            weakSelf.scrollView.maximumZoomScale = 2.0f;
+            weakSelf.scrollView.minimumZoomScale = 0.5f;
+            [weakSelf adjustImageViewWithImage:image];
         }];
     }
-
 }
 
 //调整图片尺寸
-- (void)adjustImageViewWithImage:(UIImage *)image animated:(BOOL)animated
+- (void)adjustImageViewWithImage:(UIImage *)image
 {
     self.imagView.image = image;
     CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
     CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
+    if(image == nil){
+        self.scrollView.contentInset = UIEdgeInsetsZero;
+        self.scrollView.contentSize = CGSizeMake(screenWidth, screenHeight);
+        return;
+    }
     CGFloat scale = image.size.height/image.size.width;
     CGFloat imageHeight = screenWidth*scale;
-    if(animated)
-    {
-        [UIView animateWithDuration:0.25f animations:^{
-            self.imagView.frame = CGRectMake(0, 0, screenWidth, imageHeight);
-        } completion:nil];
-        
-    }else{
-        self.imagView.frame = CGRectMake(0, 0, screenWidth, imageHeight);
-    }
-    if(imageHeight>screenHeight)
+    self.imagView.frame = CGRectMake(0, 0, screenWidth, imageHeight);
+    if(imageHeight > screenHeight)
     {
         //长图
         self.scrollView.contentInset = UIEdgeInsetsZero;
@@ -163,7 +159,6 @@
         self.scrollView.contentInset = UIEdgeInsetsMake(inset, 0, inset, 0);
     }
     self.scrollView.contentSize = CGSizeMake(screenWidth, imageHeight);
-
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
@@ -197,7 +192,7 @@
 
 - (void)singleTap:(UITapGestureRecognizer *)gesture
 {
-    [_browerVC performSelectorOnMainThread:NSSelectorFromString(@"hidePhotoBrower") withObject:nil waitUntilDone:YES];
+    [_browerVC performSelectorOnMainThread:NSSelectorFromString(@"doPhotoHideAnimation") withObject:nil waitUntilDone:YES];
 }
 
 - (void)longPress:(UILongPressGestureRecognizer *)gesture
@@ -237,6 +232,7 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:_observer];
+    self.scrollView.delegate = nil;
 }
 
 

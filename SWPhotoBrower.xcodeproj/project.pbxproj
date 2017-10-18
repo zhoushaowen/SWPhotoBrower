@@ -16,7 +16,8 @@
 		360FB3BD1E8FCE43001F285B /* SWPhotoBrowerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 360FB3B61E8FCE43001F285B /* SWPhotoBrowerCell.m */; };
 		360FB3BE1E8FCE43001F285B /* SWPhotoBrowerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 360FB3B81E8FCE43001F285B /* SWPhotoBrowerController.m */; };
 		360FB3BF1E8FCE43001F285B /* SWProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 360FB3BA1E8FCE43001F285B /* SWProgressView.m */; };
-		360FB3C01E8FCE43001F285B /* UIViewController+PhotoBrower.m in Sources */ = {isa = PBXBuildFile; fileRef = 360FB3BC1E8FCE43001F285B /* UIViewController+PhotoBrower.m */; };
+		3664AF1C1F4D79A600A43131 /* MyCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3664AF1B1F4D79A600A43131 /* MyCollectionViewCell.m */; };
+		36C7366D1F96EAC90064A6B8 /* MyNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C7366C1F96EAC90064A6B8 /* MyNavigationController.m */; };
 		F5548044668F13A71E4544E5 /* libPods-SWPhotoBrower.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C03445ABD47F5382B5332032 /* libPods-SWPhotoBrower.a */; };
 /* End PBXBuildFile section */
 
@@ -38,8 +39,10 @@
 		360FB3B81E8FCE43001F285B /* SWPhotoBrowerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWPhotoBrowerController.m; sourceTree = "<group>"; };
 		360FB3B91E8FCE43001F285B /* SWProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWProgressView.h; sourceTree = "<group>"; };
 		360FB3BA1E8FCE43001F285B /* SWProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWProgressView.m; sourceTree = "<group>"; };
-		360FB3BB1E8FCE43001F285B /* UIViewController+PhotoBrower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PhotoBrower.h"; sourceTree = "<group>"; };
-		360FB3BC1E8FCE43001F285B /* UIViewController+PhotoBrower.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PhotoBrower.m"; sourceTree = "<group>"; };
+		3664AF1A1F4D79A600A43131 /* MyCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCollectionViewCell.h; sourceTree = "<group>"; };
+		3664AF1B1F4D79A600A43131 /* MyCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCollectionViewCell.m; sourceTree = "<group>"; };
+		36C7366B1F96EAC90064A6B8 /* MyNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyNavigationController.h; sourceTree = "<group>"; };
+		36C7366C1F96EAC90064A6B8 /* MyNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyNavigationController.m; sourceTree = "<group>"; };
 		9C228718199C8F95AAD22541 /* Pods-SWPhotoBrower.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SWPhotoBrower.release.xcconfig"; path = "Pods/Target Support Files/Pods-SWPhotoBrower/Pods-SWPhotoBrower.release.xcconfig"; sourceTree = "<group>"; };
 		C03445ABD47F5382B5332032 /* libPods-SWPhotoBrower.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SWPhotoBrower.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -82,6 +85,10 @@
 				360FB3A11E8FCE0B001F285B /* AppDelegate.m */,
 				360FB3A31E8FCE0B001F285B /* ViewController.h */,
 				360FB3A41E8FCE0B001F285B /* ViewController.m */,
+				36C7366B1F96EAC90064A6B8 /* MyNavigationController.h */,
+				36C7366C1F96EAC90064A6B8 /* MyNavigationController.m */,
+				3664AF1A1F4D79A600A43131 /* MyCollectionViewCell.h */,
+				3664AF1B1F4D79A600A43131 /* MyCollectionViewCell.m */,
 				360FB3A61E8FCE0B001F285B /* Main.storyboard */,
 				360FB3A91E8FCE0B001F285B /* Assets.xcassets */,
 				360FB3AB1E8FCE0B001F285B /* LaunchScreen.storyboard */,
@@ -108,8 +115,6 @@
 				360FB3B81E8FCE43001F285B /* SWPhotoBrowerController.m */,
 				360FB3B91E8FCE43001F285B /* SWProgressView.h */,
 				360FB3BA1E8FCE43001F285B /* SWProgressView.m */,
-				360FB3BB1E8FCE43001F285B /* UIViewController+PhotoBrower.h */,
-				360FB3BC1E8FCE43001F285B /* UIViewController+PhotoBrower.m */,
 			);
 			path = SWPhotoBrower;
 			sourceTree = "<group>";
@@ -160,12 +165,12 @@
 		360FB3921E8FCE0B001F285B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = Yidu;
 				TargetAttributes = {
 					360FB3991E8FCE0B001F285B = {
 						CreatedOnToolsVersion = 8.3;
-						DevelopmentTeam = 2YW229246G;
+						DevelopmentTeam = J4CUZ29K74;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -255,11 +260,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				360FB3A51E8FCE0B001F285B /* ViewController.m in Sources */,
-				360FB3C01E8FCE43001F285B /* UIViewController+PhotoBrower.m in Sources */,
 				360FB3BE1E8FCE43001F285B /* SWPhotoBrowerController.m in Sources */,
+				36C7366D1F96EAC90064A6B8 /* MyNavigationController.m in Sources */,
 				360FB3A21E8FCE0B001F285B /* AppDelegate.m in Sources */,
 				360FB39F1E8FCE0B001F285B /* main.m in Sources */,
 				360FB3BD1E8FCE43001F285B /* SWPhotoBrowerCell.m in Sources */,
+				3664AF1C1F4D79A600A43131 /* MyCollectionViewCell.m in Sources */,
 				360FB3BF1E8FCE43001F285B /* SWProgressView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -296,7 +302,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -304,7 +312,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -344,7 +356,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -352,7 +366,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -381,11 +399,14 @@
 			baseConfigurationReference = 220186AE8B46B46009259CBE /* Pods-SWPhotoBrower.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 2YW229246G;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J4CUZ29K74;
 				INFOPLIST_FILE = SWPhotoBrower/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.yidu.SWPhotoBrower;
+				PRODUCT_BUNDLE_IDENTIFIER = com.loko.SWPhotoBrower;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -394,11 +415,14 @@
 			baseConfigurationReference = 9C228718199C8F95AAD22541 /* Pods-SWPhotoBrower.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 2YW229246G;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J4CUZ29K74;
 				INFOPLIST_FILE = SWPhotoBrower/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.yidu.SWPhotoBrower;
+				PRODUCT_BUNDLE_IDENTIFIER = com.loko.SWPhotoBrower;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};

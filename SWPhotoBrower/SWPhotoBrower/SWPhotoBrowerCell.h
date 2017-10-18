@@ -18,4 +18,5 @@
 @property (nonatomic,strong) NSURL *normalImageUrl;
 @property (nonatomic,weak) SWPhotoBrowerController *browerVC;
 
+
 @end
