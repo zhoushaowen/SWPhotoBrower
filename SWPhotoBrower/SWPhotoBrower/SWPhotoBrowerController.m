@@ -163,7 +163,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
     if([self isIPhoneX]) return UIStatusBarStyleLightContent;
-    return UIStatusBarStyleDefault;
+    return self.browerPresentingViewController.preferredStatusBarStyle;
 }
 
 - (BOOL)isIPhoneX {
