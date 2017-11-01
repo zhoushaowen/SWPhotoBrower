@@ -20,23 +20,19 @@
     // Do any additional setup after loading the view.
 }
 
+- (UIViewController *)childViewControllerForStatusBarHidden {
+    return nil;
+}
+
+- (UIViewController *)childViewControllerForStatusBarStyle {
+    return nil;
+}
+
 - (BOOL)prefersStatusBarHidden {
-    if([self.visibleViewController isKindOfClass:[SWPhotoBrowerController class]]){
-        SWPhotoBrowerController *browerVC = (SWPhotoBrowerController *)self.visibleViewController;
-        if(browerVC.photoBrowerControllerStatus == SWPhotoBrowerControllerHidingStatus || browerVC.photoBrowerControllerStatus == SWPhotoBrowerControllerHidingStatus){
-            return NO;
-        }
-    }
     return self.visibleViewController.prefersStatusBarHidden;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    if([self.visibleViewController isKindOfClass:[SWPhotoBrowerController class]]){
-        SWPhotoBrowerController *browerVC = (SWPhotoBrowerController *)self.visibleViewController;
-        if(browerVC.photoBrowerControllerStatus == SWPhotoBrowerControllerHidingStatus || browerVC.photoBrowerControllerStatus == SWPhotoBrowerControllerDidHideStatus){
-            return UIStatusBarStyleDefault;
-        }
-    }
     return self.visibleViewController.preferredStatusBarStyle;
 }
 

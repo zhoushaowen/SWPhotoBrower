@@ -19,6 +19,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     BOOL _flag;
     __weak id _observer;
     UIImageView *_originalImageView;//用来保存小图
+    BOOL _statusBarHidden;
 }
 
 //当前图片的索引
@@ -44,7 +45,6 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
         _index = index;
         _normalImageUrls = normalImageUrls;
         _bigImageUrls = bigImageUrls ? bigImageUrls : normalImageUrls;
-        
         NSAssert(_delegate != nil, @"SWPhotoBrowerControllerDelegate不能为空");
         NSAssert([_delegate respondsToSelector:@selector(photoBrowerControllerOriginalImageView:withIndex:)], @"photoBrowerControllerOriginalImageView:withIndex:代理方法必须实现");
         //获取小图
@@ -74,6 +74,11 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
         return;
     _isPresented = YES;
     [self doPhotoShowAnimation];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self.browerPresentingViewController setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)setupUI
@@ -116,7 +121,6 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     _flag = YES;
 }
 
-
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     return self.bigImageUrls.count;
@@ -153,8 +157,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 //隐藏状态栏
 - (BOOL)prefersStatusBarHidden
 {
-    if([self isIPhoneX]) return NO;
-    return YES;
+    return _statusBarHidden;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
@@ -211,8 +214,11 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     [UIView animateWithDuration:SWPhotoBrowerAnimationDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.tempImageView.frame = toFrame;
         self.view.backgroundColor = [UIColor blackColor];
-        //更新状态栏
-        [self setNeedsStatusBarAppearanceUpdate];
+        //更新状态栏,iphoneX不要隐藏状态栏
+        if(![self isIPhoneX]){
+            _statusBarHidden = YES;
+            [self setNeedsStatusBarAppearanceUpdate];
+        }
     } completion:^(BOOL finished) {
         //移除图片
         [self.tempImageView removeFromSuperview];
@@ -223,6 +229,11 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 
 - (void)doPhotoHideAnimation
 {
+    //一定要在获取到imageView的frame之前改变状态栏，否则动画会出现跳一下的现象
+    if(![self isIPhoneX]){
+        _statusBarHidden = NO;
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
     //获取当前屏幕可见cell的indexPath
     NSIndexPath *visibleIndexPath = _collectionView.indexPathsForVisibleItems.lastObject;
     _index = visibleIndexPath.row;
@@ -244,7 +255,6 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     [UIView animateWithDuration:SWPhotoBrowerAnimationDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.tempImageView.frame = convertFrame;
         self.view.backgroundColor = [UIColor clearColor];
-        [self setNeedsStatusBarAppearanceUpdate];
         //旋转屏幕至原来的状态
         [[UIDevice currentDevice] setValue:@(_originalOrientation) forKey:@"orientation"];
     } completion:^(BOOL finished) {
@@ -303,7 +313,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     return YES;
 }
 
-- (void)showBrower {
+- (void)show {
     if(self.photoBrowerControllerStatus != SWPhotoBrowerControllerUnShowStatus) return;
     dispatch_async(dispatch_get_main_queue(), ^{
         [self setValue:@(SWPhotoBrowerControllerShowingStatus) forKey:@"photoBrowerControllerStatus"];

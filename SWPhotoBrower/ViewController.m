@@ -46,6 +46,11 @@ static NSString *const Cell = @"cell";
     [self.view addSubview:_collectionView];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return _dataArray.count;
 }
@@ -65,7 +70,7 @@ static NSString *const Cell = @"cell";
         [bigImageUrls addObject:[NSURL URLWithString:str]];
     }];
     SWPhotoBrowerController *photoBrower = [[SWPhotoBrowerController alloc] initWithIndex:indexPath.item delegate:self normalImageUrls:[normalImageUrls copy] bigImageUrls:[bigImageUrls copy] browerPresentingViewController:self];
-    [photoBrower showBrower];
+    [photoBrower show];
 }
 
 #pragma mark - SWPhotoBrowerControllerDelegate
@@ -74,6 +79,9 @@ static NSString *const Cell = @"cell";
     return cell.imgV;
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return NO;
+}
 
 
 @end

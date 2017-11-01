@@ -71,6 +71,6 @@ extern NSTimeInterval const SWPhotoBrowerAnimationDuration;
 /**
  显示图片浏览器
  */
-- (void)showBrower;
+- (void)show;
 
 @end
