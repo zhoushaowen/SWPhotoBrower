@@ -15,11 +15,11 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 @interface SWPhotoBrowerController ()<UICollectionViewDelegate,UICollectionViewDataSource>
 {
     UIInterfaceOrientation _originalOrientation;//记录之前的旋转状态
-    BOOL _isPresented;
     BOOL _flag;
     __weak id _observer;
     UIImageView *_originalImageView;//用来保存小图
     BOOL _statusBarHidden;
+    BOOL _isPresentAnimation;
 }
 
 //当前图片的索引
@@ -65,15 +65,6 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 {
     [super viewDidLoad];
     [self setupUI];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    if(_isPresented)
-        return;
-    _isPresented = YES;
-    [self doPhotoShowAnimation];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -129,12 +120,17 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     SWPhotoBrowerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+    //已知bug：cellForItemAtIndexPath这里的indexPath有可能是乱序，不能在这里进行下载
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(SWPhotoBrowerCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"%@",indexPath);
     cell.browerVC = self;
     //先设置小图
     cell.normalImageUrl = self.normalImageUrls[indexPath.row];
     //后设置大图
     cell.bigImageUrl = self.bigImageUrls[indexPath.row];
-    return cell;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(SWPhotoBrowerCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
@@ -190,30 +186,36 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     return _tempImageView;
 }
 
-- (void)doPhotoShowAnimation
+- (void)doPresentAnimation:(id<UIViewControllerContextTransitioning>)transitionContext
 {
+    self.photoBrowerControllerStatus = SWPhotoBrowerControllerWillShow;
+    UIView *containerView = [transitionContext containerView];
+    containerView.backgroundColor = [UIColor blackColor];
+    UIView *toView = [transitionContext viewForKey:UITransitionContextToViewKey];
+    toView.backgroundColor = [UIColor clearColor];
+    [containerView addSubview:toView];
     NSURL *imageUrl = _bigImageUrls[_index];
     //从缓存中获取大图
     UIImage *image = [[SDImageCache sharedImageCache] imageFromCacheForKey:imageUrl.absoluteString];
     if(image == nil){
         NSURL *normalImgUrl = _normalImageUrls[_index];
         image = [[SDImageCache sharedImageCache] imageFromCacheForKey:normalImgUrl.absoluteString];
-        if(image == nil){
-            self.view.backgroundColor = [UIColor blackColor];
-            _collectionView.hidden = NO;
-            return;
+        if(image == nil){//小图大图都没有找到
+            if(_delegate && [_delegate respondsToSelector:@selector(photoBrowerControllerPlaceholderImageForDownloadError:)]){
+                image = [_delegate photoBrowerControllerPlaceholderImageForDownloadError:self];
+            }
         }
     }
     //获取转换之后的坐标
     CGRect convertFrame = [_originalImageView.superview convertRect:_originalImageView.frame toCoordinateSpace:[UIScreen mainScreen].coordinateSpace];
     self.tempImageView.frame = convertFrame;
     self.tempImageView.image = image;
-    [self.view addSubview:self.tempImageView];
+    [toView addSubview:self.tempImageView];
     //计算临时图片放大之后的frame
     CGRect toFrame = [self getTempImageViewFrameWithImage:image];
     [UIView animateWithDuration:SWPhotoBrowerAnimationDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.tempImageView.frame = toFrame;
-        self.view.backgroundColor = [UIColor blackColor];
+        toView.backgroundColor = [UIColor blackColor];
         //更新状态栏,iphoneX不要隐藏状态栏
         if(![self isIPhoneX]){
             _statusBarHidden = YES;
@@ -224,11 +226,14 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
         [self.tempImageView removeFromSuperview];
         //显示图片浏览器
         _collectionView.hidden = NO;
+        [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
+        self.photoBrowerControllerStatus = SWPhotoBrowerControllerDidShow;
     }];
 }
 
-- (void)doPhotoHideAnimation
+- (void)doDismissAnimation:(id<UIViewControllerContextTransitioning>)transitionContext
 {
+    self.photoBrowerControllerStatus = SWPhotoBrowerControllerWillHide;
     //一定要在获取到imageView的frame之前改变状态栏，否则动画会出现跳一下的现象
     if(![self isIPhoneX]){
         _statusBarHidden = NO;
@@ -236,7 +241,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     }
     //获取当前屏幕可见cell的indexPath
     NSIndexPath *visibleIndexPath = _collectionView.indexPathsForVisibleItems.lastObject;
-    _index = visibleIndexPath.row;
+    _index = visibleIndexPath.item;
     if(_delegate && [_delegate respondsToSelector:@selector(photoBrowerControllerWillHide:withIndex:)])
     {
         [_delegate photoBrowerControllerWillHide:self withIndex:_index];
@@ -246,27 +251,22 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     CGRect fromRect = [cell.imagView.superview convertRect:cell.imagView.frame toCoordinateSpace:[UIScreen mainScreen].coordinateSpace];
     self.tempImageView.frame = fromRect;
     _collectionView.hidden = YES;
-    [self.view addSubview:self.tempImageView];
+    UIView *containerView = [transitionContext containerView];
+    UIView *fromView = [transitionContext viewForKey:UITransitionContextFromViewKey];
+    [fromView addSubview:self.tempImageView];
     UIImageView *imageView = [_delegate photoBrowerControllerOriginalImageView:self withIndex:_index];
     _normalImageViewSize = imageView.frame.size;
     CGRect convertFrame = [imageView.superview convertRect:imageView.frame toCoordinateSpace:[UIScreen mainScreen].coordinateSpace];
-    [_collectionView removeFromSuperview];
-    self.collectionView.userInteractionEnabled = NO;
     [UIView animateWithDuration:SWPhotoBrowerAnimationDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.tempImageView.frame = convertFrame;
-        self.view.backgroundColor = [UIColor clearColor];
+        fromView.backgroundColor = [UIColor clearColor];
+        containerView.backgroundColor = [UIColor clearColor];
         //旋转屏幕至原来的状态
         [[UIDevice currentDevice] setValue:@(_originalOrientation) forKey:@"orientation"];
     } completion:^(BOOL finished) {
-        [self hideBrowerController];
-    }];
-}
-
-- (void)hideBrowerController
-{
-    self.photoBrowerControllerStatus = SWPhotoBrowerControllerHidingStatus;
-    [self dismissViewControllerAnimated:NO completion:^{
-        self.photoBrowerControllerStatus = SWPhotoBrowerControllerDidHideStatus;
+        [fromView removeFromSuperview];
+        [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
+        self.photoBrowerControllerStatus = SWPhotoBrowerControllerDidHide;
     }];
 }
 
@@ -274,7 +274,10 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 {
     CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
     CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
-    CGFloat scale = image.size.height/image.size.width;
+    CGFloat scale = 1.0f;
+    if(image != nil){
+        scale = image.size.height/image.size.width;
+    }
     CGFloat imageHeight = screenWidth*scale;
     CGFloat inset = 0;
     if(imageHeight<screenHeight)
@@ -292,10 +295,12 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {
+    _isPresentAnimation = YES;
     return self;
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
+    _isPresentAnimation = NO;
     return self;
 }
 
@@ -305,7 +310,11 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 }
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
-
+    if(_isPresentAnimation){
+        [self doPresentAnimation:transitionContext];
+    }else{
+        [self doDismissAnimation:transitionContext];
+    }
 }
 
 - (BOOL)shouldAutorotate
@@ -314,14 +323,11 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 }
 
 - (void)show {
-    if(self.photoBrowerControllerStatus != SWPhotoBrowerControllerUnShowStatus) return;
+    if(self.photoBrowerControllerStatus != SWPhotoBrowerControllerUnShow) return;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self setValue:@(SWPhotoBrowerControllerShowingStatus) forKey:@"photoBrowerControllerStatus"];
         self.transitioningDelegate = self;
         self.modalPresentationStyle = UIModalPresentationCustom;
-        [self.browerPresentingViewController presentViewController:self animated:NO completion:^{
-            [self setValue:@(SWPhotoBrowerControllerDidShowStatus) forKey:@"photoBrowerControllerStatus"];
-        }];
+        [self.browerPresentingViewController presentViewController:self animated:YES completion:nil];
     });
 }
 

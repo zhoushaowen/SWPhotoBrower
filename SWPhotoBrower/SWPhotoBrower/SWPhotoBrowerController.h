@@ -9,11 +9,11 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSUInteger, SWPhotoBrowerControllerStatus) {
-    SWPhotoBrowerControllerUnShowStatus,//未显示
-    SWPhotoBrowerControllerShowingStatus,//正在显示出来
-    SWPhotoBrowerControllerDidShowStatus,//已经显示出来
-    SWPhotoBrowerControllerHidingStatus,//正在隐藏
-    SWPhotoBrowerControllerDidHideStatus,//已经隐藏
+    SWPhotoBrowerControllerUnShow,//未显示
+    SWPhotoBrowerControllerWillShow,//将要显示出来
+    SWPhotoBrowerControllerDidShow,//已经显示出来
+    SWPhotoBrowerControllerWillHide,//将要隐藏
+    SWPhotoBrowerControllerDidHide,//已经隐藏
 };
 
 @class SWPhotoBrowerController;
@@ -23,11 +23,31 @@ extern NSTimeInterval const SWPhotoBrowerAnimationDuration;
 @protocol SWPhotoBrowerControllerDelegate <NSObject>
 
 @required
-//获取将要缩放的小图
+
+/**
+ 获取将要缩放的小图
+
+ @param browerController 图片浏览器
+ @param index 当前图片索引
+ @return 原始的小图
+ */
 - (UIImageView *)photoBrowerControllerOriginalImageView:(SWPhotoBrowerController *)browerController withIndex:(NSInteger)index;
-@optional
-//图片浏览器即将消失
+/**
+ 图片浏览器即将消失
+
+ @param browerController 图片浏览器
+ @param index 当前图片索引
+ */
 - (void)photoBrowerControllerWillHide:(SWPhotoBrowerController *)browerController withIndex:(NSInteger)index;
+
+@optional
+/**
+ 下载失败的占位图
+
+ @param browerController 图片浏览器
+ @return 占位图
+ */
+- (UIImage *)photoBrowerControllerPlaceholderImageForDownloadError:(SWPhotoBrowerController *)browerController;
 
 @end
 

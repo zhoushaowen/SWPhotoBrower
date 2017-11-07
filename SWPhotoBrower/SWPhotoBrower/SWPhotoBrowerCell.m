@@ -12,6 +12,7 @@
 #import "SWProgressView.h"
 #import <SDWebImageManager.h>
 #import <MBProgressHUD.h>
+#import "SWShortTapGestureRecognizer.h"
 
 @interface SWPhotoBrowerCell ()<UIScrollViewDelegate>
 {
@@ -62,7 +63,7 @@
         singleTap.numberOfTapsRequired = 1;
         [_scrollView addGestureRecognizer:singleTap];
         //双击
-        UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
+        SWShortTapGestureRecognizer *doubleTap = [[SWShortTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
         doubleTap.numberOfTapsRequired = 2;
         [_scrollView addGestureRecognizer:doubleTap];
         [singleTap requireGestureRecognizerToFail:doubleTap];
@@ -92,12 +93,17 @@
 //    self.imagView.image = image;
     CGSize size = _browerVC.normalImageViewSize;
     CGFloat offX = ([UIScreen mainScreen].bounds.size.width - size.width)*0.5f;
-    offX = offX<0 ? 0 : offX;
+    offX = offX < 0 ? 0 : offX;
     CGFloat offY = ([UIScreen mainScreen].bounds.size.height - size.height)*0.5f;
-    offY = offY<0 ? 0: offY;
+    offY = offY < 0 ? 0 : offY;
 //    self.imagView.frame = CGRectMake(0, 0, size.width, size.height);
 //    self.scrollView.contentInset = UIEdgeInsetsMake(offY, offX, offY, offX);
 //    self.scrollView.contentSize = size;
+    if(image == nil){
+        if(self.browerVC.delegate && [self.browerVC.delegate respondsToSelector:@selector(photoBrowerControllerPlaceholderImageForDownloadError:)]){
+            image = [self.browerVC.delegate photoBrowerControllerPlaceholderImageForDownloadError:self.browerVC];
+        }
+    }
     [self adjustImageViewWithImage:image];
 }
 
@@ -117,7 +123,7 @@
         self.scrollView.maximumZoomScale = 2.0f;
         self.scrollView.minimumZoomScale = 0.5f;
     }else{
-        self.progressView.progress = 0.01;
+        [MBProgressHUD hideHUDForView:self.browerVC.view animated:NO];
         __weak typeof(self) weakSelf = self;
         [[SDWebImageManager sharedManager] cancelAll];
         [[SDWebImageManager sharedManager] loadImageWithURL:bigImageUrl options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
@@ -127,7 +133,10 @@
                 weakSelf.progressView.progress = proress;
             });
         } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
-            if(error) return;
+            if(error){
+                [weakSelf showHUDWithMessage:@"下载失败!"];
+                return;
+            }
             weakSelf.scrollView.maximumZoomScale = 2.0f;
             weakSelf.scrollView.minimumZoomScale = 0.5f;
             [weakSelf adjustImageViewWithImage:image];
@@ -194,7 +203,9 @@
 - (void)singleTap:(UITapGestureRecognizer *)gesture
 {
     if(gesture.state != UIGestureRecognizerStateEnded) return;
-    [_browerVC performSelectorOnMainThread:NSSelectorFromString(@"doPhotoHideAnimation") withObject:nil waitUntilDone:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_browerVC dismissViewControllerAnimated:YES completion:nil];
+    });
 }
 
 - (void)longPress:(UILongPressGestureRecognizer *)gesture
@@ -226,9 +237,11 @@
 }
 
 - (void)showHUDWithMessage:(NSString *)msg {
+    [MBProgressHUD hideHUDForView:self.browerVC.view animated:YES];
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.browerVC.view animated:YES];
     hud.mode = MBProgressHUDModeText;
     hud.label.text = msg;
+    hud.userInteractionEnabled = NO;
     [hud hideAnimated:YES afterDelay:1.0f];
 }
 
