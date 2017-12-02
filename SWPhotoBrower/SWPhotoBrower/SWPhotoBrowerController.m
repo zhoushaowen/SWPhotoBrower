@@ -9,6 +9,7 @@
 #import "SWPhotoBrowerController.h"
 #import "SWPhotoBrowerCell.h"
 #import <SDImageCache.h>
+#import <SDWebImageManager.h>
 
 NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 
@@ -20,13 +21,15 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     UIImageView *_originalImageView;//用来保存小图
     BOOL _statusBarHidden;
     BOOL _isPresentAnimation;
+    UIPanGestureRecognizer *_panGesture;
+    __weak UIView *_containerView;
 }
 
 //当前图片的索引
 @property (nonatomic) NSInteger index;
 @property (nonatomic,strong) UIImageView *tempImageView;
-@property (nonatomic,strong) UICollectionView *collectionView;
 @property (nonatomic) SWPhotoBrowerControllerStatus photoBrowerControllerStatus;
+@property (nonatomic,strong) UICollectionView *collectionView;
 
 @end
 
@@ -94,6 +97,9 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     _collectionView.hidden = YES;
     [_collectionView registerClass:[SWPhotoBrowerCell class] forCellWithReuseIdentifier:@"cell"];
     [self.view addSubview:_collectionView];
+    //添加平移手势
+    _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    [self.view addGestureRecognizer:_panGesture];
 }
 
 - (void)viewWillLayoutSubviews
@@ -191,6 +197,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     self.photoBrowerControllerStatus = SWPhotoBrowerControllerWillShow;
     UIView *containerView = [transitionContext containerView];
     containerView.backgroundColor = [UIColor blackColor];
+    _containerView = containerView;
     UIView *toView = [transitionContext viewForKey:UITransitionContextToViewKey];
     toView.backgroundColor = [UIColor clearColor];
     [containerView addSubview:toView];
@@ -215,7 +222,6 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     CGRect toFrame = [self getTempImageViewFrameWithImage:image];
     [UIView animateWithDuration:SWPhotoBrowerAnimationDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.tempImageView.frame = toFrame;
-        toView.backgroundColor = [UIColor blackColor];
         //更新状态栏,iphoneX不要隐藏状态栏
         if(![self isIPhoneX]){
             _statusBarHidden = YES;
@@ -259,7 +265,6 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     CGRect convertFrame = [imageView.superview convertRect:imageView.frame toCoordinateSpace:[UIScreen mainScreen].coordinateSpace];
     [UIView animateWithDuration:SWPhotoBrowerAnimationDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.tempImageView.frame = convertFrame;
-        fromView.backgroundColor = [UIColor clearColor];
         containerView.backgroundColor = [UIColor clearColor];
         //旋转屏幕至原来的状态
         [[UIDevice currentDevice] setValue:@(_originalOrientation) forKey:@"orientation"];
@@ -331,9 +336,65 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     });
 }
 
+#pragma mark - HandleGesture
+- (void)handlePanGesture:(UIPanGestureRecognizer *)panGesture
+{
+    CGPoint point = [panGesture translationInView:panGesture.view];
+    CGPoint velocity = [panGesture velocityInView:panGesture.view];
+    SWPhotoBrowerCell *cell = [[_collectionView visibleCells] firstObject];
+    switch (panGesture.state) {
+        case UIGestureRecognizerStateBegan:
+        {
+            //更改状态栏
+            _statusBarHidden = NO;
+            [self setNeedsStatusBarAppearanceUpdate];
+        }
+            break;
+            
+        case UIGestureRecognizerStateChanged:
+        {
+            double percent = 1 - fabs(point.y)/self.view.frame.size.height;
+            percent = MAX(percent, 0);
+            double s = MAX(percent, 0.5);//最低不能缩小原来的0.5倍
+            CGAffineTransform translation = CGAffineTransformMakeTranslation(point.x, point.y);
+            CGAffineTransform scale = CGAffineTransformMakeScale(s, s);
+            //合并两个transform
+            cell.imagView.transform = CGAffineTransformConcat(scale, translation);
+            _containerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:percent];
+        }
+            break;
+            
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateCancelled:
+        {
+            if(fabs(point.y) > 200 || fabs(velocity.y) > 500){
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }else{
+                //恢复图片到原来的属性
+                _collectionView.userInteractionEnabled = NO;
+                if(![self isIPhoneX]){
+                    _statusBarHidden = YES;
+                }
+                [UIView animateWithDuration:SWPhotoBrowerAnimationDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+                    _containerView.backgroundColor = [UIColor blackColor];
+                    cell.imagView.transform = CGAffineTransformIdentity;
+                    [self setNeedsStatusBarAppearanceUpdate];
+                } completion:^(BOOL finished) {
+                    _collectionView.userInteractionEnabled = YES;
+                }];
+            }
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
 - (void)dealloc
 {
     NSLog(@"%s",__func__);
+    [[SDWebImageManager sharedManager] cancelAll];
     [[NSNotificationCenter defaultCenter] removeObserver:_observer];
     _collectionView.delegate = nil;
     _collectionView.dataSource = nil;

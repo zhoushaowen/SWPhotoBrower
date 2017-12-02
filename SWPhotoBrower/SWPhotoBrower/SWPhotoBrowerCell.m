@@ -112,7 +112,6 @@
     _bigImageUrl = bigImageUrl;
     //先关闭缩放
     self.scrollView.maximumZoomScale = 1.0f;
-    self.scrollView.minimumZoomScale = 1.0f;
     self.progressView.progress = 1.0f;
     //从缓存中取大图
     UIImage *image = [[SDImageCache sharedImageCache] imageFromCacheForKey:bigImageUrl.absoluteString];
@@ -121,7 +120,6 @@
         [self adjustImageViewWithImage:image];
         //开启缩放
         self.scrollView.maximumZoomScale = 2.0f;
-        self.scrollView.minimumZoomScale = 0.5f;
     }else{
         [MBProgressHUD hideHUDForView:self.browerVC.view animated:NO];
         __weak typeof(self) weakSelf = self;
@@ -138,7 +136,6 @@
                 return;
             }
             weakSelf.scrollView.maximumZoomScale = 2.0f;
-            weakSelf.scrollView.minimumZoomScale = 0.5f;
             [weakSelf adjustImageViewWithImage:image];
         }];
     }
@@ -170,6 +167,7 @@
     self.scrollView.contentSize = CGSizeMake(screenWidth, imageHeight);
 }
 
+#pragma mark - UIScrollViewDelegate
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {
     return self.imagView;
