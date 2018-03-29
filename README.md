@@ -2,9 +2,10 @@
 仿微信图片浏览器,支持屏幕旋转,完美适配iPhoneX
 
 
-##导入方式: pod 'SWPhotoBrower'
+**导入方式: pod 'SWPhotoBrower'**
 
 gif截图
+
 ![1.gif](https://github.com/zhoushaowen/SWPhotoBrower/blob/master/screenshot/1.gif?raw=true)
 
 ### 使用方法
