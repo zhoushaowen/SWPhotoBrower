@@ -25,22 +25,23 @@ extern NSTimeInterval const SWPhotoBrowerAnimationDuration;
 @required
 
 /**
- 获取将要缩放的小图
+ 从哪个原始的UIImageView显示放大动画
 
  @param browerController 图片浏览器
  @param index 当前图片索引
- @return 原始的小图
+ @return 原始的UIImageView
  */
 - (UIImageView *)photoBrowerControllerOriginalImageView:(SWPhotoBrowerController *)browerController withIndex:(NSInteger)index;
-/**
- 图片浏览器即将消失
 
+@optional
+/**
+ 图片浏览器即将执行消失动画
+ 
  @param browerController 图片浏览器
  @param index 当前图片索引
  */
 - (void)photoBrowerControllerWillHide:(SWPhotoBrowerController *)browerController withIndex:(NSInteger)index;
 
-@optional
 /**
  下载失败的占位图
 
