@@ -19,6 +19,7 @@
     __weak id _observer;
 }
 @property (nonatomic,strong) SWProgressView *progressView;
+@property (nonatomic) UIDeviceOrientation currentOrientation;
 
 @end
 
@@ -38,8 +39,11 @@
         [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.progressView attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0]];
         [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_progressView(w)]" options:0 metrics:@{@"w":@(self.progressView.frame.size.width)} views:NSDictionaryOfVariableBindings(_progressView)]];
         [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_progressView(h)]" options:0 metrics:@{@"h":@(self.progressView.frame.size.height)} views:NSDictionaryOfVariableBindings(_progressView)]];
+        self.currentOrientation = [UIDevice currentDevice].orientation;
         __weak typeof(self) weakSelf = self;
         _observer = [[NSNotificationCenter defaultCenter] addObserverForName:UIDeviceOrientationDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+            if([UIDevice currentDevice].orientation == weakSelf.currentOrientation) return;
+            weakSelf.currentOrientation = [UIDevice currentDevice].orientation;
             [weakSelf.scrollView setZoomScale:1.0f animated:YES];
         }];
     }
@@ -90,15 +94,11 @@
     _normalImageUrl = normalImageUrl;
     self.scrollView.zoomScale = 1.0f;
     UIImage *image = [[SDImageCache sharedImageCache] imageFromCacheForKey:normalImageUrl.absoluteString];
-//    self.imagView.image = image;
     CGSize size = _browerVC.normalImageViewSize;
     CGFloat offX = ([UIScreen mainScreen].bounds.size.width - size.width)*0.5f;
     offX = offX < 0 ? 0 : offX;
     CGFloat offY = ([UIScreen mainScreen].bounds.size.height - size.height)*0.5f;
     offY = offY < 0 ? 0 : offY;
-//    self.imagView.frame = CGRectMake(0, 0, size.width, size.height);
-//    self.scrollView.contentInset = UIEdgeInsetsMake(offY, offX, offY, offX);
-//    self.scrollView.contentSize = size;
     if(image == nil){
         if(self.browerVC.delegate && [self.browerVC.delegate respondsToSelector:@selector(photoBrowerControllerPlaceholderImageForDownloadError:)]){
             image = [self.browerVC.delegate photoBrowerControllerPlaceholderImageForDownloadError:self.browerVC];

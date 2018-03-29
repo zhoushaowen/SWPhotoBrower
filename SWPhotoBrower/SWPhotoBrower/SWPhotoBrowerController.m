@@ -13,7 +13,7 @@
 
 NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 
-@interface SWPhotoBrowerController ()<UICollectionViewDelegate,UICollectionViewDataSource>
+@interface SWPhotoBrowerController ()<UICollectionViewDelegate,UICollectionViewDataSource,UIGestureRecognizerDelegate>
 {
     UIInterfaceOrientation _originalOrientation;//记录之前的旋转状态
     BOOL _flag;
@@ -30,6 +30,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 @property (nonatomic,strong) UIImageView *tempImageView;
 @property (nonatomic) SWPhotoBrowerControllerStatus photoBrowerControllerStatus;
 @property (nonatomic,strong) UICollectionView *collectionView;
+@property (nonatomic) UIDeviceOrientation currentOrientation;
 
 @end
 
@@ -53,9 +54,13 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
         //获取小图
         _originalImageView =  [_delegate photoBrowerControllerOriginalImageView:self withIndex:self.index];
         _normalImageViewSize = _originalImageView.frame.size;
+        self.currentOrientation = [UIDevice currentDevice].orientation;
         __weak typeof(self) weakSelf = self;
+        //warning:在下拉屏幕的时候也会触发UIDeviceOrientationDidChangeNotification,所以如果当前屏幕旋转状态没有改变就不用刷新UI
         _observer = [[NSNotificationCenter defaultCenter] addObserverForName:UIDeviceOrientationDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
             if(!weakSelf.isViewLoaded) return;
+            if([UIDevice currentDevice].orientation == weakSelf.currentOrientation) return;
+            weakSelf.currentOrientation = [UIDevice currentDevice].orientation;
             [weakSelf.collectionView reloadData];
             [weakSelf.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:weakSelf.index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
         }];
@@ -99,6 +104,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     [self.view addSubview:_collectionView];
     //添加平移手势
     _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    _panGesture.delegate = self;
     [self.view addGestureRecognizer:_panGesture];
 }
 
@@ -336,6 +342,25 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     });
 }
 
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    SWPhotoBrowerCell *cell = [[_collectionView visibleCells] firstObject];
+    if(cell.scrollView.zoomScale > 1.0f) return NO;
+    CGPoint velocity = [_panGesture velocityInView:_panGesture.view];
+    if(velocity.y < 0) return NO;//禁止上滑
+    return YES;
+}
+
+//这个方法返回YES，第一个和第二个互斥时，第二个会失效
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    SWPhotoBrowerCell *cell = [[_collectionView visibleCells] firstObject];
+    if(otherGestureRecognizer == cell.scrollView.panGestureRecognizer){
+        if(cell.scrollView.contentOffset.y <= 0) return YES;
+    }
+    return NO;
+}
+
+
 #pragma mark - HandleGesture
 - (void)handlePanGesture:(UIPanGestureRecognizer *)panGesture
 {
@@ -348,6 +373,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
             //更改状态栏
             _statusBarHidden = NO;
             [self setNeedsStatusBarAppearanceUpdate];
+            
         }
             break;
             
@@ -359,8 +385,10 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
             CGAffineTransform translation = CGAffineTransformMakeTranslation(point.x, point.y);
             CGAffineTransform scale = CGAffineTransformMakeScale(s, s);
             //合并两个transform
-            cell.imagView.transform = CGAffineTransformConcat(scale, translation);
-            _containerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:percent];
+            CGAffineTransform concatTransform = CGAffineTransformConcat(scale, translation);
+            cell.scrollView.transform = concatTransform;
+            double alpha = 1.0 - MIN(1.0, point.y/(self.view.frame.size.height/2.0f));
+            _containerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:alpha];
         }
             break;
             
@@ -375,9 +403,10 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
                 if(![self isIPhoneX]){
                     _statusBarHidden = YES;
                 }
-                [UIView animateWithDuration:SWPhotoBrowerAnimationDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+                [UIView animateWithDuration:SWPhotoBrowerAnimationDuration delay:0 options:0 animations:^{
                     _containerView.backgroundColor = [UIColor blackColor];
-                    cell.imagView.transform = CGAffineTransformIdentity;
+                    cell.scrollView.transform = CGAffineTransformIdentity;
+                    [cell adjustImageViewWithImage:cell.imagView.image];
                     [self setNeedsStatusBarAppearanceUpdate];
                 } completion:^(BOOL finished) {
                     _collectionView.userInteractionEnabled = YES;

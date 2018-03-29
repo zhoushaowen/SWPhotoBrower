@@ -17,6 +17,6 @@
 @property (nonatomic,strong) NSURL *bigImageUrl;
 @property (nonatomic,strong) NSURL *normalImageUrl;
 @property (nonatomic,weak) SWPhotoBrowerController *browerVC;
-
+- (void)adjustImageViewWithImage:(UIImage *)image;
 
 @end

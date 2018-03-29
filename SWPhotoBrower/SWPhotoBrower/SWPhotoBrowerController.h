@@ -93,4 +93,12 @@ extern NSTimeInterval const SWPhotoBrowerAnimationDuration;
  */
 - (void)show;
 
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder __unavailable;
+
+- (instancetype)init NS_UNAVAILABLE;
+
++ (instancetype)new __unavailable;
+
 @end
