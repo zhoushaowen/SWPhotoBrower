@@ -1,5 +1,5 @@
 # SWPhotoBrower
-仿微信图片浏览器,支持屏幕旋转,完美适配iPhoneX
+仿微信图片浏览器,支持手势拖拽实现动画缩放,支持屏幕旋转,完美适配iPhoneX
 
 
 **导入方式: pod 'SWPhotoBrower'**
