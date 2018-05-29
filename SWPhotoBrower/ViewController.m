@@ -65,6 +65,7 @@ static NSString *const Cell = @"cell";
         [bigImageUrls addObject:[NSURL URLWithString:str]];
     }];
     SWPhotoBrowerController *photoBrower = [[SWPhotoBrowerController alloc] initWithIndex:indexPath.item delegate:self normalImageUrls:[normalImageUrls copy] bigImageUrls:[bigImageUrls copy] browerPresentingViewController:self];
+//    photoBrower.disablePhotoSave = YES;
     [photoBrower show];
 }
 

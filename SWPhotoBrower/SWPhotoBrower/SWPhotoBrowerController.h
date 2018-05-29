@@ -79,6 +79,10 @@ extern NSTimeInterval const SWPhotoBrowerAnimationDuration;
  */
 @property (nonatomic,readonly) CGSize normalImageViewSize;
 /**
+ 是否禁止保存图片
+ */
+@property (nonatomic) BOOL disablePhotoSave;
+/**
  初始化方法
 
  @param index 当前图片在数组中的index

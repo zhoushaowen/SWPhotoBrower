@@ -10,7 +10,7 @@
 
 @class SWPhotoBrowerController;
 
-@interface SWPhotoBrowerCell : UICollectionViewCell
+@interface SWPhotoBrowerCell : UICollectionViewCell<UIGestureRecognizerDelegate>
 
 @property (nonatomic,strong) UIScrollView *scrollView;
 @property (nonatomic,strong) UIImageView *imagView;

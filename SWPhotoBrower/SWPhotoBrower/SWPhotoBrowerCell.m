@@ -17,6 +17,7 @@
 @interface SWPhotoBrowerCell ()<UIScrollViewDelegate>
 {
     __weak id _observer;
+    UILongPressGestureRecognizer *_longPress;
 }
 @property (nonatomic,strong) SWProgressView *progressView;
 @property (nonatomic) UIDeviceOrientation currentOrientation;
@@ -73,6 +74,8 @@
         [singleTap requireGestureRecognizerToFail:doubleTap];
         //添加长按手势
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+        longPress.delegate = self;
+        _longPress = longPress;
         [_scrollView addGestureRecognizer:longPress];
     }
     
@@ -241,6 +244,12 @@
     hud.label.text = msg;
     hud.userInteractionEnabled = NO;
     [hud hideAnimated:YES afterDelay:1.0f];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if(gestureRecognizer == _longPress) return !self.browerVC.disablePhotoSave;
+    return YES;
 }
 
 - (void)dealloc
