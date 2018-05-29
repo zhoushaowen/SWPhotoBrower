@@ -31,6 +31,8 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 @property (nonatomic) SWPhotoBrowerControllerStatus photoBrowerControllerStatus;
 @property (nonatomic,strong) UICollectionView *collectionView;
 @property (nonatomic) UIDeviceOrientation currentOrientation;
+@property (nonatomic,strong) NSMutableDictionary *originalImageViews;//原始imageView字典
+@property (nonatomic,strong) NSMutableDictionary *originalImages;//原始imageView的图片字典
 
 @end
 
@@ -159,6 +161,15 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     NSInteger index = ABS(targetContentOffset->x/self.view.frame.size.width);
     self.index = index;
     UIImageView *imageView = [_delegate photoBrowerControllerOriginalImageView:self withIndex:index];
+    [self.originalImageViews enumerateKeysAndObjectsUsingBlock:^(NSString*  _Nonnull key, UIImageView*  _Nonnull imgV, BOOL * _Nonnull stop) {
+        imgV.image = [self.originalImages objectForKey:key];
+    }];
+    [self.originalImageViews removeAllObjects];
+    [self.originalImages removeAllObjects];
+    NSString *key = [NSString stringWithFormat:@"%ld",(long)index];
+    [self.originalImages setObject:imageView.image forKey:key];
+    imageView.image = nil;
+    [self.originalImageViews setObject:imageView forKey:key];
     _normalImageViewSize = imageView.frame.size;
 }
 
@@ -231,6 +242,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
         //更新状态栏,iphoneX不要隐藏状态栏
         if(![self isIPhoneX]){
             _statusBarHidden = YES;
+            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
             [self setNeedsStatusBarAppearanceUpdate];
         }
     } completion:^(BOOL finished) {
@@ -240,6 +252,11 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
         _collectionView.hidden = NO;
         [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
         self.photoBrowerControllerStatus = SWPhotoBrowerControllerDidShow;
+        UIImageView *imageView = [self.delegate photoBrowerControllerOriginalImageView:self withIndex:self.index];
+        NSString *key = [NSString stringWithFormat:@"%ld",(long)self.index];
+        [self.originalImages setValue:imageView.image forKey:key];
+        [self.originalImageViews setObject:imageView forKey:key];
+        imageView.image = nil;
     }];
 }
 
@@ -249,6 +266,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     //一定要在获取到imageView的frame之前改变状态栏，否则动画会出现跳一下的现象
     if(![self isIPhoneX]){
         _statusBarHidden = NO;
+        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
         [self setNeedsStatusBarAppearanceUpdate];
     }
     //获取当前屏幕可见cell的indexPath
@@ -278,6 +296,11 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
         [fromView removeFromSuperview];
         [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
         self.photoBrowerControllerStatus = SWPhotoBrowerControllerDidHide;
+        [self.originalImageViews enumerateKeysAndObjectsUsingBlock:^(NSString*  _Nonnull key, UIImageView*  _Nonnull imgV, BOOL * _Nonnull stop) {
+            imgV.image = [self.originalImages objectForKey:key];
+        }];
+        [self.originalImageViews removeAllObjects];
+        [self.originalImages removeAllObjects];
     }];
 }
 
@@ -296,6 +319,20 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
         inset = (screenHeight - imageHeight)*0.5f;
     }
     return CGRectMake(0, inset, screenWidth, imageHeight);
+}
+
+- (NSMutableDictionary *)originalImages {
+    if(!_originalImages){
+        _originalImages = [NSMutableDictionary dictionaryWithCapacity:0];
+    }
+    return _originalImages;
+}
+
+- (NSMutableDictionary *)originalImageViews {
+    if(!_originalImageViews){
+        _originalImageViews = [NSMutableDictionary dictionaryWithCapacity:0];
+    }
+    return _originalImageViews;
 }
 
 #pragma mark - UIViewControllerTransitioningDelegate
@@ -372,6 +409,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
         {
             //更改状态栏
             _statusBarHidden = NO;
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
             [self setNeedsStatusBarAppearanceUpdate];
             
         }
@@ -402,6 +440,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
                 _collectionView.userInteractionEnabled = NO;
                 if(![self isIPhoneX]){
                     _statusBarHidden = YES;
+                    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
                 }
                 [UIView animateWithDuration:SWPhotoBrowerAnimationDuration delay:0 options:0 animations:^{
                     _containerView.backgroundColor = [UIColor blackColor];
