@@ -10,8 +10,21 @@
 #import "SWPhotoBrowerCell.h"
 #import <SDImageCache.h>
 #import <SDWebImageManager.h>
+#import <UIView+WebCache.h>
 
 NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
+
+@interface MyCollectionView : UICollectionView
+
+@end
+
+@implementation MyCollectionView
+
+- (void)dealloc {
+    NSLog(@"%s",__func__);
+}
+
+@end
 
 @interface SWPhotoBrowerController ()<UICollectionViewDelegate,UICollectionViewDataSource,UIGestureRecognizerDelegate>
 {
@@ -86,7 +99,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 {
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
     flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width+16, self.view.frame.size.height) collectionViewLayout:flow];
+    _collectionView = [[MyCollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width+16, self.view.frame.size.height) collectionViewLayout:flow];
 #ifdef __IPHONE_11_0
     if([_collectionView respondsToSelector:@selector(setContentInsetAdjustmentBehavior:)]){
         _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -139,7 +152,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(SWPhotoBrowerCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"%@",indexPath);
+//    NSLog(@"%@",indexPath);
     cell.browerVC = self;
     //先设置小图
     cell.normalImageUrl = self.normalImageUrls[indexPath.row];
@@ -167,7 +180,9 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     [self.originalImageViews removeAllObjects];
     [self.originalImages removeAllObjects];
     NSString *key = [NSString stringWithFormat:@"%ld",(long)index];
-    [self.originalImages setObject:imageView.image forKey:key];
+    if(imageView.image){
+        [self.originalImages setObject:imageView.image forKey:key];
+    }
     imageView.image = nil;
     [self.originalImageViews setObject:imageView forKey:key];
     _normalImageViewSize = imageView.frame.size;
@@ -221,13 +236,17 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     NSURL *imageUrl = _bigImageUrls[_index];
     //从缓存中获取大图
     UIImage *image = [[SDImageCache sharedImageCache] imageFromCacheForKey:imageUrl.absoluteString];
+    CGFloat duration = SWPhotoBrowerAnimationDuration;
     if(image == nil){
         NSURL *normalImgUrl = _normalImageUrls[_index];
         image = [[SDImageCache sharedImageCache] imageFromCacheForKey:normalImgUrl.absoluteString];
         if(image == nil){//小图大图都没有找到
             if(_delegate && [_delegate respondsToSelector:@selector(photoBrowerControllerPlaceholderImageForDownloadError:)]){
                 image = [_delegate photoBrowerControllerPlaceholderImageForDownloadError:self];
+            }else{
+                image = [UIImage imageNamed:@"placeholder"];
             }
+            duration = 0;
         }
     }
     //获取转换之后的坐标
@@ -237,7 +256,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     [toView addSubview:self.tempImageView];
     //计算临时图片放大之后的frame
     CGRect toFrame = [self getTempImageViewFrameWithImage:image];
-    [UIView animateWithDuration:SWPhotoBrowerAnimationDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.tempImageView.frame = toFrame;
         //更新状态栏,iphoneX不要隐藏状态栏
         if(![self isIPhoneX]){
@@ -254,7 +273,9 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
         self.photoBrowerControllerStatus = SWPhotoBrowerControllerDidShow;
         UIImageView *imageView = [self.delegate photoBrowerControllerOriginalImageView:self withIndex:self.index];
         NSString *key = [NSString stringWithFormat:@"%ld",(long)self.index];
-        [self.originalImages setValue:imageView.image forKey:key];
+        if(imageView.image){
+            [self.originalImages setObject:imageView.image forKey:key];
+        }
         [self.originalImageViews setObject:imageView forKey:key];
         imageView.image = nil;
     }];
@@ -266,7 +287,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     //一定要在获取到imageView的frame之前改变状态栏，否则动画会出现跳一下的现象
     if(![self isIPhoneX]){
         _statusBarHidden = NO;
-        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
         [self setNeedsStatusBarAppearanceUpdate];
     }
     //获取当前屏幕可见cell的indexPath
@@ -287,8 +308,15 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     UIImageView *imageView = [_delegate photoBrowerControllerOriginalImageView:self withIndex:_index];
     _normalImageViewSize = imageView.frame.size;
     CGRect convertFrame = [imageView.superview convertRect:imageView.frame toCoordinateSpace:[UIScreen mainScreen].coordinateSpace];
-    [UIView animateWithDuration:SWPhotoBrowerAnimationDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        self.tempImageView.frame = convertFrame;
+    CGFloat duration = SWPhotoBrowerAnimationDuration;
+    if(![[SDImageCache sharedImageCache] imageFromCacheForKey:_bigImageUrls[_index].absoluteString] &&
+       ![[SDImageCache sharedImageCache] imageFromCacheForKey:_normalImageUrls[_index].absoluteString]){
+        duration = 0;
+    }
+    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        if(duration != 0){
+            self.tempImageView.frame = convertFrame;
+        }
         containerView.backgroundColor = [UIColor clearColor];
         //旋转屏幕至原来的状态
         [[UIDevice currentDevice] setValue:@(_originalOrientation) forKey:@"orientation"];
@@ -385,6 +413,10 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     if(cell.scrollView.zoomScale > 1.0f) return NO;
     CGPoint velocity = [_panGesture velocityInView:_panGesture.view];
     if(velocity.y < 0) return NO;//禁止上滑
+    if(![[SDImageCache sharedImageCache] imageFromCacheForKey:_bigImageUrls[_index].absoluteString] &&
+       ![[SDImageCache sharedImageCache] imageFromCacheForKey:_normalImageUrls[_index].absoluteString]){
+        return NO;
+    }
     return YES;
 }
 

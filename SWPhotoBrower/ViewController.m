@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "MyCollectionViewCell.h"
 #import <UIImageView+WebCache.h>
-#import "SWPhotoBrowerController.h"
+#import <SWPhotoBrowerController.h>
 
 static NSString *const Cell = @"cell";
 
@@ -80,10 +80,6 @@ static NSString *const Cell = @"cell";
     [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     //collectionView必须要layoutIfNeeded，否则cellForItemAtIndexPath,有可能获取到的是nil，
     [_collectionView layoutIfNeeded];
-}
-
-- (UIImage *)photoBrowerControllerPlaceholderImageForDownloadError:(SWPhotoBrowerController *)browerController {
-    return [UIImage imageNamed:@"error"];
 }
 
 - (BOOL)prefersStatusBarHidden {

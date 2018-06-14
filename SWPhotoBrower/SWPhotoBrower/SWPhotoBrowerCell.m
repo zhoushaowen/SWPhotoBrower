@@ -105,6 +105,8 @@
     if(image == nil){
         if(self.browerVC.delegate && [self.browerVC.delegate respondsToSelector:@selector(photoBrowerControllerPlaceholderImageForDownloadError:)]){
             image = [self.browerVC.delegate photoBrowerControllerPlaceholderImageForDownloadError:self.browerVC];
+        }else{
+            image = [UIImage imageNamed:@"placeholder"];
         }
     }
     [self adjustImageViewWithImage:image];
@@ -124,6 +126,7 @@
         //开启缩放
         self.scrollView.maximumZoomScale = 2.0f;
     }else{
+        self.progressView.progress = 0.0;
         [MBProgressHUD hideHUDForView:self.browerVC.view animated:NO];
         __weak typeof(self) weakSelf = self;
         [[SDWebImageManager sharedManager] cancelAll];
@@ -135,7 +138,8 @@
             });
         } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
             if(error){
-                [weakSelf showHUDWithMessage:@"下载失败!"];
+                [weakSelf showHUDWithMessage:@"无法加载图片" imageName:@"TipViewErrorIcon"];
+//                NSLog(@"------%@",imageURL);
                 return;
             }
             weakSelf.scrollView.maximumZoomScale = 2.0f;
@@ -205,6 +209,7 @@
 {
     if(gesture.state != UIGestureRecognizerStateEnded) return;
     dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideHUDForView:_browerVC.view animated:NO];
         [_browerVC dismissViewControllerAnimated:YES completion:nil];
     });
 }
@@ -227,14 +232,12 @@
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
 {
-    NSString *msg = nil;
     if(error)
     {
-        msg = @"保存失败";
+        [self showHUDWithMessage:@"保存失败" imageName:@"TipViewErrorIcon"];
     }else{
-        msg = @"保存成功";
+        [self showHUDWithMessage:@"保存成功" imageName:@"icon_success"];
     }
-    [self showHUDWithMessage:msg];
 }
 
 - (void)showHUDWithMessage:(NSString *)msg {
@@ -243,11 +246,32 @@
     hud.mode = MBProgressHUDModeText;
     hud.label.text = msg;
     hud.userInteractionEnabled = NO;
-    [hud hideAnimated:YES afterDelay:1.0f];
+    [hud hideAnimated:YES afterDelay:2.0f];
+}
+
+- (void)showHUDWithMessage:(NSString *)msg imageName:(NSString *)imageName {
+    [MBProgressHUD hideHUDForView:self.contentView animated:NO];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.contentView animated:YES];
+    hud.mode = MBProgressHUDModeCustomView;
+    hud.label.text = msg;
+    hud.label.font = [UIFont systemFontOfSize:15];
+    hud.contentColor = [UIColor whiteColor];
+    hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
+    hud.userInteractionEnabled = NO;
+    hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
+    hud.backgroundView.style = MBProgressHUDBackgroundStyleSolidColor;
+    hud.bezelView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5f];
+    hud.square = YES;//强制让hud的宽高相等
+    [hud hideAnimated:YES afterDelay:2.0f];
 }
 
 #pragma mark - UIGestureRecognizerDelegate
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if(gestureRecognizer == _longPress &&
+       ![[SDImageCache sharedImageCache] imageFromCacheForKey:self.browerVC.bigImageUrls[self.browerVC.index].absoluteString] &&
+       ![[SDImageCache sharedImageCache] imageFromCacheForKey:self.browerVC.normalImageUrls[self.browerVC.index].absoluteString]){
+           return NO;
+    }
     if(gestureRecognizer == _longPress) return !self.browerVC.disablePhotoSave;
     return YES;
 }

@@ -41,7 +41,6 @@ extern NSTimeInterval const SWPhotoBrowerAnimationDuration;
  @param index 当前图片索引
  */
 - (void)photoBrowerControllerWillHide:(SWPhotoBrowerController *)browerController withIndex:(NSInteger)index;
-
 /**
  下载失败的占位图
 
@@ -69,11 +68,11 @@ extern NSTimeInterval const SWPhotoBrowerAnimationDuration;
 /**
  小图url
  */
-@property (nonatomic,readonly,strong) NSArray<NSURL *> *normalImageUrls;
+@property (nonatomic,readonly,copy) NSArray<NSURL *> *normalImageUrls;
 /**
  大图url
  */
-@property (nonatomic,readonly,strong) NSArray<NSURL *> *bigImageUrls;
+@property (nonatomic,readonly,copy) NSArray<NSURL *> *bigImageUrls;
 /**
  小图的大小
  */

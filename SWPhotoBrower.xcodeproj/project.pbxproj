@@ -12,11 +12,7 @@
 		360FB3A51E8FCE0B001F285B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 360FB3A41E8FCE0B001F285B /* ViewController.m */; };
 		360FB3AA1E8FCE0B001F285B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 360FB3A91E8FCE0B001F285B /* Assets.xcassets */; };
 		360FB3AD1E8FCE0B001F285B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 360FB3AB1E8FCE0B001F285B /* LaunchScreen.storyboard */; };
-		360FB3BD1E8FCE43001F285B /* SWPhotoBrowerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 360FB3B61E8FCE43001F285B /* SWPhotoBrowerCell.m */; };
-		360FB3BE1E8FCE43001F285B /* SWPhotoBrowerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 360FB3B81E8FCE43001F285B /* SWPhotoBrowerController.m */; };
-		360FB3BF1E8FCE43001F285B /* SWProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 360FB3BA1E8FCE43001F285B /* SWProgressView.m */; };
 		3664AF1C1F4D79A600A43131 /* MyCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3664AF1B1F4D79A600A43131 /* MyCollectionViewCell.m */; };
-		366AB2891FAB057200E92277 /* SWShortTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 366AB2881FAB057200E92277 /* SWShortTapGestureRecognizer.m */; };
 		36C7366D1F96EAC90064A6B8 /* MyNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C7366C1F96EAC90064A6B8 /* MyNavigationController.m */; };
 		F5548044668F13A71E4544E5 /* libPods-SWPhotoBrower.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C03445ABD47F5382B5332032 /* libPods-SWPhotoBrower.a */; };
 /* End PBXBuildFile section */
@@ -32,16 +28,8 @@
 		360FB3A91E8FCE0B001F285B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		360FB3AC1E8FCE0B001F285B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		360FB3AE1E8FCE0B001F285B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		360FB3B51E8FCE43001F285B /* SWPhotoBrowerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWPhotoBrowerCell.h; sourceTree = "<group>"; };
-		360FB3B61E8FCE43001F285B /* SWPhotoBrowerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWPhotoBrowerCell.m; sourceTree = "<group>"; };
-		360FB3B71E8FCE43001F285B /* SWPhotoBrowerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWPhotoBrowerController.h; sourceTree = "<group>"; };
-		360FB3B81E8FCE43001F285B /* SWPhotoBrowerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWPhotoBrowerController.m; sourceTree = "<group>"; };
-		360FB3B91E8FCE43001F285B /* SWProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWProgressView.h; sourceTree = "<group>"; };
-		360FB3BA1E8FCE43001F285B /* SWProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWProgressView.m; sourceTree = "<group>"; };
 		3664AF1A1F4D79A600A43131 /* MyCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCollectionViewCell.h; sourceTree = "<group>"; };
 		3664AF1B1F4D79A600A43131 /* MyCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCollectionViewCell.m; sourceTree = "<group>"; };
-		366AB2871FAB057200E92277 /* SWShortTapGestureRecognizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWShortTapGestureRecognizer.h; sourceTree = "<group>"; };
-		366AB2881FAB057200E92277 /* SWShortTapGestureRecognizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWShortTapGestureRecognizer.m; sourceTree = "<group>"; };
 		36C7366B1F96EAC90064A6B8 /* MyNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyNavigationController.h; sourceTree = "<group>"; };
 		36C7366C1F96EAC90064A6B8 /* MyNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyNavigationController.m; sourceTree = "<group>"; };
 		9C228718199C8F95AAD22541 /* Pods-SWPhotoBrower.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SWPhotoBrower.release.xcconfig"; path = "Pods/Target Support Files/Pods-SWPhotoBrower/Pods-SWPhotoBrower.release.xcconfig"; sourceTree = "<group>"; };
@@ -81,7 +69,6 @@
 		360FB39C1E8FCE0B001F285B /* SWPhotoBrower */ = {
 			isa = PBXGroup;
 			children = (
-				360FB3B41E8FCE43001F285B /* SWPhotoBrower */,
 				360FB3A01E8FCE0B001F285B /* AppDelegate.h */,
 				360FB3A11E8FCE0B001F285B /* AppDelegate.m */,
 				360FB3A31E8FCE0B001F285B /* ViewController.h */,
@@ -104,21 +91,6 @@
 				360FB39E1E8FCE0B001F285B /* main.m */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		360FB3B41E8FCE43001F285B /* SWPhotoBrower */ = {
-			isa = PBXGroup;
-			children = (
-				360FB3B51E8FCE43001F285B /* SWPhotoBrowerCell.h */,
-				360FB3B61E8FCE43001F285B /* SWPhotoBrowerCell.m */,
-				360FB3B71E8FCE43001F285B /* SWPhotoBrowerController.h */,
-				360FB3B81E8FCE43001F285B /* SWPhotoBrowerController.m */,
-				366AB2871FAB057200E92277 /* SWShortTapGestureRecognizer.h */,
-				366AB2881FAB057200E92277 /* SWShortTapGestureRecognizer.m */,
-				360FB3B91E8FCE43001F285B /* SWProgressView.h */,
-				360FB3BA1E8FCE43001F285B /* SWProgressView.m */,
-			);
-			path = SWPhotoBrower;
 			sourceTree = "<group>";
 		};
 		BA669B547E5BC66BC0060EAC /* Frameworks */ = {
@@ -149,7 +121,6 @@
 				360FB3961E8FCE0B001F285B /* Sources */,
 				360FB3971E8FCE0B001F285B /* Frameworks */,
 				360FB3981E8FCE0B001F285B /* Resources */,
-				36EF538A2CF1AAD1675D393C /* [CP] Embed Pods Frameworks */,
 				4797A76BEA65BB9796BC89C7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -208,30 +179,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		36EF538A2CF1AAD1675D393C /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SWPhotoBrower/Pods-SWPhotoBrower-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		4797A76BEA65BB9796BC89C7 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-SWPhotoBrower/Pods-SWPhotoBrower-resources.sh",
+				"${PODS_ROOT}/../SWPhotoBrower/SWPhotoBrower/img/icon_success@2x.png",
+				"${PODS_ROOT}/../SWPhotoBrower/SWPhotoBrower/img/placeholder@2x.png",
+				"${PODS_ROOT}/../SWPhotoBrower/SWPhotoBrower/img/TipViewErrorIcon@2x.png",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/icon_success@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/placeholder@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TipViewErrorIcon@2x.png",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -244,13 +207,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SWPhotoBrower-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -261,14 +227,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				360FB3A51E8FCE0B001F285B /* ViewController.m in Sources */,
-				360FB3BE1E8FCE43001F285B /* SWPhotoBrowerController.m in Sources */,
 				36C7366D1F96EAC90064A6B8 /* MyNavigationController.m in Sources */,
 				360FB3A21E8FCE0B001F285B /* AppDelegate.m in Sources */,
 				360FB39F1E8FCE0B001F285B /* main.m in Sources */,
-				360FB3BD1E8FCE43001F285B /* SWPhotoBrowerCell.m in Sources */,
 				3664AF1C1F4D79A600A43131 /* MyCollectionViewCell.m in Sources */,
-				360FB3BF1E8FCE43001F285B /* SWProgressView.m in Sources */,
-				366AB2891FAB057200E92277 /* SWShortTapGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
