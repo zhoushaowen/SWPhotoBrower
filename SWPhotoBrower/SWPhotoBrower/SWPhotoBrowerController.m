@@ -444,6 +444,14 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
             [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
             [self setNeedsStatusBarAppearanceUpdate];
             
+            //设置anchorPoint和position
+            CGPoint location = [panGesture locationInView:panGesture.view];
+            CGPoint anchorPoint = CGPointMake(location.x/panGesture.view.bounds.size.width, location.y/panGesture.view.bounds.size.height);
+            cell.scrollView.layer.anchorPoint = anchorPoint;
+            CGPoint position = cell.scrollView.layer.position;
+            position.x = cell.scrollView.center.x + (anchorPoint.x - 0.5) * cell.scrollView.bounds.size.width;
+            position.y = cell.scrollView.center.y + (anchorPoint.y - 0.5) * cell.scrollView.bounds.size.height;
+            cell.scrollView.layer.position = position;
         }
             break;
             
@@ -476,6 +484,9 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
                 }
                 [UIView animateWithDuration:SWPhotoBrowerAnimationDuration delay:0 options:0 animations:^{
                     _containerView.backgroundColor = [UIColor blackColor];
+                    //还原anchorPoint和position
+                    cell.scrollView.layer.anchorPoint = CGPointMake(0.5, 0.5);
+                    cell.scrollView.layer.position = CGPointMake(cell.scrollView.bounds.size.width/2.0f, cell.scrollView.bounds.size.height/2.0f);
                     cell.scrollView.transform = CGAffineTransformIdentity;
                     [cell adjustImageViewWithImage:cell.imagView.image];
                     [self setNeedsStatusBarAppearanceUpdate];
