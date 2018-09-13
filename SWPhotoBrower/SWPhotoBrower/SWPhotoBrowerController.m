@@ -152,7 +152,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(SWPhotoBrowerCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-//    NSLog(@"%@",indexPath);
+    //    NSLog(@"%@",indexPath);
     cell.browerVC = self;
     //先设置小图
     cell.normalImageUrl = self.normalImageUrls[indexPath.row];
@@ -171,7 +171,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
-    NSInteger index = ABS(targetContentOffset->x/self.view.frame.size.width);
+    NSInteger index = ABS(targetContentOffset->x/(self.view.frame.size.width + 16));
     self.index = index;
     UIImageView *imageView = [_delegate photoBrowerControllerOriginalImageView:self withIndex:index];
     [self.originalImageViews enumerateKeysAndObjectsUsingBlock:^(NSString*  _Nonnull key, UIImageView*  _Nonnull imgV, BOOL * _Nonnull stop) {
@@ -311,6 +311,9 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     CGFloat duration = SWPhotoBrowerAnimationDuration;
     if(![[SDImageCache sharedImageCache] imageFromCacheForKey:_bigImageUrls[_index].absoluteString] &&
        ![[SDImageCache sharedImageCache] imageFromCacheForKey:_normalImageUrls[_index].absoluteString]){
+        duration = 0;
+    }
+    if(CGRectEqualToRect(convertFrame, CGRectZero)){
         duration = 0;
     }
     [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
