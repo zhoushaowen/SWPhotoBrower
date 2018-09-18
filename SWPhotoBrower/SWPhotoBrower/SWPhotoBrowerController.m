@@ -196,15 +196,19 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
-    if([self isIPhoneX]) return UIStatusBarStyleLightContent;
+    if([self isIPhoneXSeries]) return UIStatusBarStyleLightContent;
     return self.browerPresentingViewController.preferredStatusBarStyle;
 }
 
-- (BOOL)isIPhoneX {
+- (BOOL)isIPhoneXSeries {
     static BOOL flag;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        if([UIScreen mainScreen].bounds.size.width == 375 && [UIScreen mainScreen].bounds.size.height == 812) {
+        CGFloat width = [UIScreen mainScreen].bounds.size.width;
+        CGFloat height = [UIScreen mainScreen].bounds.size.height;
+        if((width == 375 && height == 812) || (height == 375 && width == 812)) {//iPhone X,iPhone XS
+            flag = YES;
+        }else if ((width == 414 && height == 896) || (height == 896 && width == 414)){//iPhone XR,iPhone XS Max
             flag = YES;
         }
     });
@@ -259,7 +263,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.tempImageView.frame = toFrame;
         //更新状态栏,iphoneX不要隐藏状态栏
-        if(![self isIPhoneX]){
+        if(![self isIPhoneXSeries]){
             _statusBarHidden = YES;
             [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
             [self setNeedsStatusBarAppearanceUpdate];
@@ -285,7 +289,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 {
     self.photoBrowerControllerStatus = SWPhotoBrowerControllerWillHide;
     //一定要在获取到imageView的frame之前改变状态栏，否则动画会出现跳一下的现象
-    if(![self isIPhoneX]){
+    if(![self isIPhoneXSeries]){
         _statusBarHidden = NO;
         [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
         [self setNeedsStatusBarAppearanceUpdate];
@@ -481,7 +485,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
             }else{
                 //恢复图片到原来的属性
                 _collectionView.userInteractionEnabled = NO;
-                if(![self isIPhoneX]){
+                if(![self isIPhoneXSeries]){
                     _statusBarHidden = YES;
                     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
                 }
