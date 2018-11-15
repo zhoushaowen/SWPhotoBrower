@@ -297,10 +297,6 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     //获取当前屏幕可见cell的indexPath
     NSIndexPath *visibleIndexPath = _collectionView.indexPathsForVisibleItems.lastObject;
     _index = visibleIndexPath.item;
-    if(_delegate && [_delegate respondsToSelector:@selector(photoBrowerControllerWillHide:withIndex:)])
-    {
-        [_delegate photoBrowerControllerWillHide:self withIndex:_index];
-    }
     SWPhotoBrowerCell *cell = (SWPhotoBrowerCell *)[_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:_index inSection:0]];
     self.tempImageView.image = cell.imagView.image;
     CGRect fromRect = [cell.imagView.superview convertRect:cell.imagView.frame toCoordinateSpace:[UIScreen mainScreen].coordinateSpace];
@@ -336,6 +332,10 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
         }];
         [self.originalImageViews removeAllObjects];
         [self.originalImages removeAllObjects];
+        if(_delegate && [_delegate respondsToSelector:@selector(photoBrowerControllerWillHide:withIndex:)])
+        {
+            [_delegate photoBrowerControllerWillHide:self withIndex:_index];
+        }
     }];
 }
 
