@@ -185,7 +185,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-SWPhotoBrower/Pods-SWPhotoBrower-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-SWPhotoBrower/Pods-SWPhotoBrower-resources.sh",
 				"${PODS_ROOT}/../SWPhotoBrower/SWPhotoBrower/img/icon_success@2x.png",
 				"${PODS_ROOT}/../SWPhotoBrower/SWPhotoBrower/img/placeholder@2x.png",
 				"${PODS_ROOT}/../SWPhotoBrower/SWPhotoBrower/img/TipViewErrorIcon@2x.png",
@@ -198,7 +198,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SWPhotoBrower/Pods-SWPhotoBrower-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SWPhotoBrower/Pods-SWPhotoBrower-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B18896D8FBEC61FE479FEFC6 /* [CP] Check Pods Manifest.lock */ = {

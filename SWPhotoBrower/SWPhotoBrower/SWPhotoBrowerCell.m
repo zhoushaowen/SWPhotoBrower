@@ -10,7 +10,7 @@
 #import <UIImageView+WebCache.h>
 #import "SWPhotoBrowerController.h"
 #import "SWProgressView.h"
-#import <SDWebImageManager.h>
+#import <SDImageCache.h>
 #import <MBProgressHUD.h>
 #import "SWShortTapGestureRecognizer.h"
 
