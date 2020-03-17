@@ -139,9 +139,13 @@ static NSString *const SWPhotoBrowerErrorImageIdentifier = @"SWPhotoBrowerErrorI
 //                [weakSelf showHUDWithMessage:@"无法加载图片" imageName:@"TipViewErrorIcon"];
 //                NSLog(@"------%@",imageURL);
                 if(![self setNormalImageUrl:self.normalImageUrl]){
-                    NSString *path = [[NSBundle mainBundle] pathForResource:@"SWPhotoBrower.bundle" ofType:nil];
-                    path = [path stringByAppendingPathComponent:@"preview_image_failure"];
-                    image = [UIImage imageWithContentsOfFile:path];
+                    if(self.browerVC.delegate && [self.browerVC.delegate respondsToSelector:@selector(photoBrowerControllerPlaceholderImageForDownloadError:)]){
+                        image = [self.browerVC.delegate photoBrowerControllerPlaceholderImageForDownloadError:self.browerVC];
+                    }else{
+                        NSString *path = [[NSBundle mainBundle] pathForResource:@"SWPhotoBrower.bundle" ofType:nil];
+                        path = [path stringByAppendingPathComponent:@"preview_image_failure"];
+                        image = [UIImage imageWithContentsOfFile:path];
+                    }
                     image.accessibilityIdentifier = SWPhotoBrowerErrorImageIdentifier;
                     [weakSelf adjustImageViewWithImage:image];
                 }
