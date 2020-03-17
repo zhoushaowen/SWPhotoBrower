@@ -155,7 +155,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     //    NSLog(@"%@",indexPath);
     cell.browerVC = self;
     //先设置小图
-    cell.normalImageUrl = self.normalImageUrls[indexPath.row];
+    [cell setNormalImageUrl:self.normalImageUrls[indexPath.row]];
     //后设置大图
     cell.bigImageUrl = self.bigImageUrls[indexPath.row];
 }
@@ -248,7 +248,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
             if(_delegate && [_delegate respondsToSelector:@selector(photoBrowerControllerPlaceholderImageForDownloadError:)]){
                 image = [_delegate photoBrowerControllerPlaceholderImageForDownloadError:self];
             }else{
-                image = [UIImage imageNamed:@"placeholder"];
+//                image = [UIImage imageNamed:@"placeholder"];
             }
             duration = 0;
         }

@@ -186,15 +186,11 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SWPhotoBrower/Pods-SWPhotoBrower-resources.sh",
-				"${PODS_ROOT}/../SWPhotoBrower/SWPhotoBrower/img/icon_success@2x.png",
-				"${PODS_ROOT}/../SWPhotoBrower/SWPhotoBrower/img/placeholder@2x.png",
-				"${PODS_ROOT}/../SWPhotoBrower/SWPhotoBrower/img/TipViewErrorIcon@2x.png",
+				"${PODS_ROOT}/../SWPhotoBrower/SWPhotoBrower/SWPhotoBrower.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/icon_success@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/placeholder@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TipViewErrorIcon@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SWPhotoBrower.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

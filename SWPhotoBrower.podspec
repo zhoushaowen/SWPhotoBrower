@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
   s.name         = "SWPhotoBrower"
 
-  s.version      = "1.1.8"
+  s.version      = "1.1.9"
 
   s.homepage      = 'https://github.com/zhoushaowen/SWPhotoBrower'
 
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   
   s.source_files  = "SWPhotoBrower/SWPhotoBrower/*.{h,m}"
 
-  s.resource = "SWPhotoBrower/SWPhotoBrower/img/*.png"
+  s.resource = "SWPhotoBrower/SWPhotoBrower/SWPhotoBrower.bundle"
   
   s.requires_arc = true
 

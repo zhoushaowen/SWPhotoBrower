@@ -14,6 +14,8 @@
 #import <MBProgressHUD.h>
 #import "SWShortTapGestureRecognizer.h"
 
+static NSString *const SWPhotoBrowerErrorImageIdentifier = @"SWPhotoBrowerErrorImageIdentifier";
+
 @interface SWPhotoBrowerCell ()<UIScrollViewDelegate>
 {
     __weak id _observer;
@@ -25,6 +27,8 @@
 @end
 
 @implementation SWPhotoBrowerCell
+
+@synthesize normalImageUrl = _normalImageUrl;
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -92,7 +96,7 @@
     return _progressView;
 }
 
-- (void)setNormalImageUrl:(NSURL *)normalImageUrl
+- (BOOL)setNormalImageUrl:(NSURL *)normalImageUrl
 {
     _normalImageUrl = normalImageUrl;
     self.scrollView.zoomScale = 1.0f;
@@ -102,14 +106,8 @@
     offX = offX < 0 ? 0 : offX;
     CGFloat offY = ([UIScreen mainScreen].bounds.size.height - size.height)*0.5f;
     offY = offY < 0 ? 0 : offY;
-    if(image == nil){
-        if(self.browerVC.delegate && [self.browerVC.delegate respondsToSelector:@selector(photoBrowerControllerPlaceholderImageForDownloadError:)]){
-            image = [self.browerVC.delegate photoBrowerControllerPlaceholderImageForDownloadError:self.browerVC];
-        }else{
-            image = [UIImage imageNamed:@"placeholder"];
-        }
-    }
     [self adjustImageViewWithImage:image];
+    return image != nil;
 }
 
 - (void)setBigImageUrl:(NSURL *)bigImageUrl
@@ -138,12 +136,19 @@
             });
         } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
             if(error){
-                [weakSelf showHUDWithMessage:@"无法加载图片" imageName:@"TipViewErrorIcon"];
+//                [weakSelf showHUDWithMessage:@"无法加载图片" imageName:@"TipViewErrorIcon"];
 //                NSLog(@"------%@",imageURL);
-                return;
+                if(![self setNormalImageUrl:self.normalImageUrl]){
+                    NSString *path = [[NSBundle mainBundle] pathForResource:@"SWPhotoBrower.bundle" ofType:nil];
+                    path = [path stringByAppendingPathComponent:@"preview_image_failure"];
+                    image = [UIImage imageWithContentsOfFile:path];
+                    image.accessibilityIdentifier = SWPhotoBrowerErrorImageIdentifier;
+                    [weakSelf adjustImageViewWithImage:image];
+                }
+            }else{
+                weakSelf.scrollView.maximumZoomScale = 2.0f;
+                [weakSelf adjustImageViewWithImage:image];
             }
-            weakSelf.scrollView.maximumZoomScale = 2.0f;
-            [weakSelf adjustImageViewWithImage:image];
         }];
     }
 }
@@ -161,17 +166,21 @@
     }
     CGFloat scale = image.size.height/image.size.width;
     CGFloat imageHeight = screenWidth*scale;
-    self.imagView.frame = CGRectMake(0, 0, screenWidth, imageHeight);
-    if(imageHeight > screenHeight)
-    {
-        //长图
+    self.imagView.frame = [image.accessibilityIdentifier isEqualToString:SWPhotoBrowerErrorImageIdentifier]?CGRectMake((screenWidth - image.size.width)/2.0f, (screenHeight - image.size.height)/2.0f, image.size.width, image.size.height):CGRectMake(0, 0, screenWidth, imageHeight);
+    if([image.accessibilityIdentifier isEqualToString:SWPhotoBrowerErrorImageIdentifier]){
         self.scrollView.contentInset = UIEdgeInsetsZero;
     }else{
-        //短图
-        CGFloat inset = (screenHeight - imageHeight) * 0.5f;
-        self.scrollView.contentInset = UIEdgeInsetsMake(inset, 0, inset, 0);
+        if(imageHeight > screenHeight)
+        {
+            //长图
+            self.scrollView.contentInset = UIEdgeInsetsZero;
+        }else{
+            //短图
+            CGFloat inset = (screenHeight - imageHeight) * 0.5f;
+            self.scrollView.contentInset = UIEdgeInsetsMake(inset, 0, inset, 0);
+        }
     }
-    self.scrollView.contentSize = CGSizeMake(screenWidth, imageHeight);
+    self.scrollView.contentSize = [image.accessibilityIdentifier isEqualToString:SWPhotoBrowerErrorImageIdentifier]?CGSizeZero: CGSizeMake(screenWidth, imageHeight);
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -256,7 +265,9 @@
     hud.label.text = msg;
     hud.label.font = [UIFont systemFontOfSize:15];
     hud.contentColor = [UIColor whiteColor];
-    hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"SWPhotoBrower.bundle" ofType:nil];
+    path = [path stringByAppendingPathComponent:imageName];
+    hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:path]];
     hud.userInteractionEnabled = NO;
     hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
     hud.backgroundView.style = MBProgressHUDBackgroundStyleSolidColor;
