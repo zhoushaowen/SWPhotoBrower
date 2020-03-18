@@ -11,7 +11,7 @@ DEPENDENCIES:
   - SWPhotoBrower (from `./`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/CocoaPods/Specs:
     - MBProgressHUD
     - SDWebImage
 
@@ -24,6 +24,6 @@ SPEC CHECKSUMS:
   SDWebImage: 920f1a2ff1ca8296ad34f6e0510a1ef1d70ac965
   SWPhotoBrower: aa34987e70a682e40aa1c111b2b3b6ed2cb90072
 
-PODFILE CHECKSUM: a306e8128fd859b5f6774953c22ec372bebd9b24
+PODFILE CHECKSUM: 906591fb965f5cf77fb624aa9b29f1e30c05f1d2
 
 COCOAPODS: 1.9.1

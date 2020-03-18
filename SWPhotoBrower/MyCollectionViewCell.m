@@ -18,7 +18,7 @@
         _imgV.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _imgV.contentMode = UIViewContentModeScaleAspectFill;
         _imgV.clipsToBounds = YES;
-        _imgV.backgroundColor = [UIColor whiteColor];
+        _imgV.backgroundColor = [UIColor lightGrayColor];
         [self.contentView addSubview:_imgV];
     }
     return self;

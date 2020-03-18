@@ -14,7 +14,7 @@
 #import <MBProgressHUD.h>
 #import "SWShortTapGestureRecognizer.h"
 
-static NSString *const SWPhotoBrowerErrorImageIdentifier = @"SWPhotoBrowerErrorImageIdentifier";
+NSString *const SWPhotoBrowerErrorImageIdentifier = @"SWPhotoBrowerErrorImageIdentifier";
 
 @interface SWPhotoBrowerCell ()<UIScrollViewDelegate>
 {

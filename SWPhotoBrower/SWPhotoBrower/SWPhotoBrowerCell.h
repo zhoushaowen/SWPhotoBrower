@@ -10,6 +10,8 @@
 
 @class SWPhotoBrowerController;
 
+extern NSString *const SWPhotoBrowerErrorImageIdentifier;
+
 @interface SWPhotoBrowerCell : UICollectionViewCell<UIGestureRecognizerDelegate>
 
 @property (nonatomic,strong) UIScrollView *scrollView;

@@ -313,6 +313,10 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
        ![[SDImageCache sharedImageCache] imageFromCacheForKey:_normalImageUrls[_index].absoluteString]){
         duration = 0;
     }
+    if([cell.imagView.image.accessibilityIdentifier isEqualToString:SWPhotoBrowerErrorImageIdentifier]){
+        duration = 0;
+        self.tempImageView.image = nil;
+    }
     if(CGRectEqualToRect(convertFrame, CGRectZero)){
         duration = 0;
     }
