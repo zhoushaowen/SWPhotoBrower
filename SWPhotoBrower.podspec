@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
   s.name         = "SWPhotoBrower"
 
-  s.version      = "1.1.9"
+  s.version      = "1.1.9.1"
 
   s.homepage      = 'https://github.com/zhoushaowen/SWPhotoBrower'
 
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   
   s.requires_arc = true
 
-  s.dependency 'SDWebImage','~> 5.0'
+  s.dependency 'SDWebImage'
   s.dependency 'MBProgressHUD'
 
 
