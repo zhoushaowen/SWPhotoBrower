@@ -138,9 +138,9 @@ NSString *const SWPhotoBrowerErrorImageIdentifier = @"SWPhotoBrowerErrorImageIde
             if(error){
 //                [weakSelf showHUDWithMessage:@"无法加载图片" imageName:@"TipViewErrorIcon"];
 //                NSLog(@"------%@",imageURL);
-                if(![self setNormalImageUrl:self.normalImageUrl]){
-                    if(self.browerVC.delegate && [self.browerVC.delegate respondsToSelector:@selector(photoBrowerControllerPlaceholderImageForDownloadError:)]){
-                        image = [self.browerVC.delegate photoBrowerControllerPlaceholderImageForDownloadError:self.browerVC];
+                if(![weakSelf setNormalImageUrl:weakSelf.normalImageUrl]){
+                    if(weakSelf.browerVC.delegate && [weakSelf.browerVC.delegate respondsToSelector:@selector(photoBrowerControllerPlaceholderImageForDownloadError:)]){
+                        image = [weakSelf.browerVC.delegate photoBrowerControllerPlaceholderImageForDownloadError:weakSelf.browerVC];
                     }else{
                         NSString *path = [[NSBundle mainBundle] pathForResource:@"SWPhotoBrower.bundle" ofType:nil];
                         path = [path stringByAppendingPathComponent:@"preview_image_failure"];
@@ -210,6 +210,8 @@ NSString *const SWPhotoBrowerErrorImageIdentifier = @"SWPhotoBrowerErrorImageIde
     if(gesture.state != UIGestureRecognizerStateEnded) return;
     if(self.scrollView.zoomScale == 1.0f)
     {
+        //如果是失败图片禁止缩放
+        if([self.imagView.image.accessibilityIdentifier isEqualToString:SWPhotoBrowerErrorImageIdentifier]) return;
         CGPoint point = [gesture locationInView:self.imagView];
         [self.scrollView zoomToRect:CGRectMake(point.x, point.y, 1, 1) animated:YES];
 
