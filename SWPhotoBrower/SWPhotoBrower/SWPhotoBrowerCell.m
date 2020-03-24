@@ -63,8 +63,10 @@ NSString *const SWPhotoBrowerErrorImageIdentifier = @"SWPhotoBrowerErrorImageIde
         _scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _scrollView.delegate = self;
 #ifdef __IPHONE_11_0
-        if([_scrollView respondsToSelector:@selector(setContentInsetAdjustmentBehavior:)]){
+        if (@available(iOS 11.0, *)) {
             _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        } else {
+            // Fallback on earlier versions
         }
 #endif
         //单击
@@ -224,8 +226,8 @@ NSString *const SWPhotoBrowerErrorImageIdentifier = @"SWPhotoBrowerErrorImageIde
 {
     if(gesture.state != UIGestureRecognizerStateEnded) return;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideHUDForView:_browerVC.view animated:NO];
-        [_browerVC dismissViewControllerAnimated:YES completion:nil];
+        [MBProgressHUD hideHUDForView:self.browerVC.view animated:NO];
+        [self.browerVC dismissViewControllerAnimated:YES completion:nil];
     });
 }
 

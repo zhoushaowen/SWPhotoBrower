@@ -101,8 +101,10 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
     flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     _collectionView = [[MyCollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width+16, self.view.frame.size.height) collectionViewLayout:flow];
 #ifdef __IPHONE_11_0
-    if([_collectionView respondsToSelector:@selector(setContentInsetAdjustmentBehavior:)]){
+    if (@available(iOS 11.0, *)) {
         _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    } else {
+        // Fallback on earlier versions
     }
 #endif
     _collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
@@ -184,8 +186,12 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
         [self.originalImages setObject:imageView.image forKey:key];
     }
     imageView.image = nil;
-    [self.originalImageViews setObject:imageView forKey:key];
-    _normalImageViewSize = imageView.frame.size;
+    if(imageView){
+        [self.originalImageViews setObject:imageView forKey:key];
+        _normalImageViewSize = imageView.frame.size;
+    }else{
+        _normalImageViewSize = CGSizeZero;
+    }
 }
 
 //隐藏状态栏
@@ -264,7 +270,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
         self.tempImageView.frame = toFrame;
         //更新状态栏,iphoneX不要隐藏状态栏
         if(![self isIPhoneXSeries]){
-            _statusBarHidden = YES;
+            self->_statusBarHidden = YES;
             [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
             [self setNeedsStatusBarAppearanceUpdate];
         }
@@ -272,7 +278,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
         //移除图片
         [self.tempImageView removeFromSuperview];
         //显示图片浏览器
-        _collectionView.hidden = NO;
+        self.collectionView.hidden = NO;
         [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
         self.photoBrowerControllerStatus = SWPhotoBrowerControllerDidShow;
         UIImageView *imageView = [self.delegate photoBrowerControllerOriginalImageView:self withIndex:self.index];
@@ -313,20 +319,20 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
        ![[SDImageCache sharedImageCache] imageFromCacheForKey:_normalImageUrls[_index].absoluteString]){
         duration = 0;
     }
-    if([cell.imagView.image.accessibilityIdentifier isEqualToString:SWPhotoBrowerErrorImageIdentifier]){
+    if([cell.imagView.image.accessibilityIdentifier isEqualToString:SWPhotoBrowerErrorImageIdentifier] || imageView == nil){
         duration = 0;
-        self.tempImageView.image = nil;
+        [self.tempImageView removeFromSuperview];
     }
     if(CGRectEqualToRect(convertFrame, CGRectZero)){
         duration = 0;
     }
     [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        if(duration != 0){
+        if(duration != 0 && self.tempImageView.superview){
             self.tempImageView.frame = convertFrame;
         }
         containerView.backgroundColor = [UIColor clearColor];
         //旋转屏幕至原来的状态
-        [[UIDevice currentDevice] setValue:@(_originalOrientation) forKey:@"orientation"];
+        [[UIDevice currentDevice] setValue:@(self->_originalOrientation) forKey:@"orientation"];
     } completion:^(BOOL finished) {
         [fromView removeFromSuperview];
         [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
@@ -336,9 +342,9 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
         }];
         [self.originalImageViews removeAllObjects];
         [self.originalImages removeAllObjects];
-        if(_delegate && [_delegate respondsToSelector:@selector(photoBrowerControllerWillHide:withIndex:)])
+        if(self.delegate && [self.delegate respondsToSelector:@selector(photoBrowerControllerWillHide:withIndex:)])
         {
-            [_delegate photoBrowerControllerWillHide:self withIndex:_index];
+            [self.delegate photoBrowerControllerWillHide:self withIndex:self.index];
         }
     }];
 }
@@ -494,7 +500,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
                     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
                 }
                 [UIView animateWithDuration:SWPhotoBrowerAnimationDuration delay:0 options:0 animations:^{
-                    _containerView.backgroundColor = [UIColor blackColor];
+                    self->_containerView.backgroundColor = [UIColor blackColor];
                     //还原anchorPoint和position
                     cell.scrollView.layer.anchorPoint = CGPointMake(0.5, 0.5);
                     cell.scrollView.layer.position = CGPointMake(cell.scrollView.bounds.size.width/2.0f, cell.scrollView.bounds.size.height/2.0f);
@@ -502,7 +508,7 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
                     [cell adjustImageViewWithImage:cell.imagView.image];
                     [self setNeedsStatusBarAppearanceUpdate];
                 } completion:^(BOOL finished) {
-                    _collectionView.userInteractionEnabled = YES;
+                    self.collectionView.userInteractionEnabled = YES;
                 }];
             }
         }

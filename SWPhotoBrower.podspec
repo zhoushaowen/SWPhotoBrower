@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
   s.name         = "SWPhotoBrower"
 
-  s.version      = "1.1.9.2"
+  s.version      = "1.2.0"
 
   s.homepage      = 'https://github.com/zhoushaowen/SWPhotoBrower'
 
