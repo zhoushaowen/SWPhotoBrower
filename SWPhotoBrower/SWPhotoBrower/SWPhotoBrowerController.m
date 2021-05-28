@@ -8,9 +8,9 @@
 
 #import "SWPhotoBrowerController.h"
 #import "SWPhotoBrowerCell.h"
-#import <SDImageCache.h>
-#import <SDWebImageManager.h>
-#import <UIView+WebCache.h>
+#import <SDWebImage/SDImageCache.h>
+#import <SDWebImage/SDWebImageManager.h>
+#import <SDWebImage/UIView+WebCache.h>
 
 NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
 
@@ -286,7 +286,9 @@ NSTimeInterval const SWPhotoBrowerAnimationDuration = 0.3f;
         if(imageView.image){
             [self.originalImages setObject:imageView.image forKey:key];
         }
-        [self.originalImageViews setObject:imageView forKey:key];
+        if(imageView){
+            [self.originalImageViews setObject:imageView forKey:key];
+        }
         imageView.image = nil;
     }];
 }

@@ -7,11 +7,11 @@
 //
 
 #import "SWPhotoBrowerCell.h"
-#import <UIImageView+WebCache.h>
+#import <SDWebImage/UIImageView+WebCache.h>
 #import "SWPhotoBrowerController.h"
 #import "SWProgressView.h"
-#import <SDImageCache.h>
-#import <MBProgressHUD.h>
+#import <SDWebImage/SDImageCache.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 #import "SWShortTapGestureRecognizer.h"
 
 NSString *const SWPhotoBrowerErrorImageIdentifier = @"SWPhotoBrowerErrorImageIdentifier";

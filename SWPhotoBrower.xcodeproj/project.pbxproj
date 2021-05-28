@@ -143,7 +143,7 @@
 				TargetAttributes = {
 					360FB3991E8FCE0B001F285B = {
 						CreatedOnToolsVersion = 8.3;
-						DevelopmentTeam = T2KGXA54VS;
+						DevelopmentTeam = XGFBK8EPZK;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -153,6 +153,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -353,8 +354,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = T2KGXA54VS;
+				DEVELOPMENT_TEAM = XGFBK8EPZK;
 				INFOPLIST_FILE = SWPhotoBrower/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.loko.SWPhotoBrower;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -369,8 +371,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = T2KGXA54VS;
+				DEVELOPMENT_TEAM = XGFBK8EPZK;
 				INFOPLIST_FILE = SWPhotoBrower/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.loko.SWPhotoBrower;
 				PRODUCT_NAME = "$(TARGET_NAME)";
